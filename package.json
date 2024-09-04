@@ -1,0 +1,25 @@
+{
+  "name": "mdxml-tools",
+  "version": "0.0.1",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test-render-site": "npm run build && node build/render.js examples/onepage/page.xml",
+    "build": "esbuild src/*.ts --outdir=build",
+    "tsc": "tsc",
+    "test": "vitest run --dir src",
+    "release-patch": "npm run build && npm version patch && npm publish"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/node": "^22.5.3",
+    "josh_js_util": "^0.1.25"
+  },
+  "devDependencies": {
+    "esbuild": "^0.23.0",
+    "typescript": "^5.5.4",
+    "vitest": "^1.4.0"
+  }
+}
