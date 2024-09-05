@@ -1,27 +1,21 @@
 <document>
     <h1>PureImage</h1>
 
-    <p>PureImage is a pure 100% JavaScript implementation of the HTML Canvas 2D drawing API for NodeJS.
-        It has no native dependencies. You can use it to resize images, draw text, render badges,
-        convert to grayscale, or anything else you could do with the standard Canvas 2D API. It also has
-        additional APIs to save an image as PNG and JPEG.
+    <p>PureImage is a pure 100% JavaScript implementation of the HTML Canvas 2D drawing API for NodeJS. It has no native dependencies. You can use it to resize images, draw text, render badges, convert to grayscale, or anything else you could do with the standard Canvas 2D API. It also has additional APIs to save an image as PNG and JPEG.
     </p>
 
     <h1>Typescript Rewrite</h1>
 
-    <p>As of version 0.4.* PureImage has been rewritten in 100% Typescript. The module is compiled
-        to both Common JS and ES Modules. If it was working for you before it should still work, but
-        if you notice anything off please file a bug report.
+    <p>As of version 0.4.* PureImage has been rewritten in 100% Typescript. The module is compiled to both Common JS and ES Modules. If it was working for you before it should still work, but if you notice anything off please file a bug report.
     </p>
 
-    <p>Also <b>note</b> that <code>font.load()</code> now returns a promise instead of using a callback. If you
-        need synchronous support you can still fuse <code>font.loadSync()</code>.
+    <p>Also <b>note</b> that <code>font.load()</code> now returns a promise instead of using a callback. If you need synchronous support you can still fuse <code>font.loadSync()</code>.
     </p>
 
     <h1>Installation</h1>
 
     <codeblock language="bash">
-        npm install pureimage
+npm install pureimage
     </codeblock>
 
     <h1>Simple example</h1>
@@ -29,27 +23,27 @@
     <p>Make a 100x100 image, fill with red, write to png file</p>
 
     <codeblock language="javascript">
-        import * as PImage from "pureimage";
-        import * as fs from "fs";
+import * as PImage from "pureimage";
+import * as fs from "fs";
 
-        // make image
-        const img1 = PImage.make(100, 100);
+// make image
+const img1 = PImage.make(100, 100);
 
-        // get canvas context
-        const ctx = img1.getContext("2d");
+// get canvas context
+const ctx = img1.getContext("2d");
 
-        // fill with red
-        ctx.fillStyle = "red";
-        ctx.fillRect(0, 0, 100, 100);
+// fill with red
+ctx.fillStyle = "red";
+ctx.fillRect(0, 0, 100, 100);
 
-        //write to 'out.png'
-        PImage.encodePNGToStream(img1, fs.createWriteStream("out.png"))
-        .then(() => {
-        console.log("wrote out the png file to out.png");
-        })
-        .catch((e) => {
-        console.log("there was an error writing");
-        });
+//write to 'out.png'
+PImage.encodePNGToStream(img1, fs.createWriteStream("out.png"))
+.then(() => {
+    console.log("wrote out the png file to out.png");
+})
+.catch((e) => {
+    console.log("there was an error writing");
+});
     </codeblock>
 
     <p>result</p>

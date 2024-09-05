@@ -58,8 +58,10 @@ function isInline(name: string) {
 function renderHeader() {
     return `<html>
 <head>
-<title>doc title</title>
-<link rel="stylesheet" href="./style.css"/>
+    <title>doc title</title>
+    <link rel="stylesheet" href="./style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
 `
@@ -67,6 +69,7 @@ function renderHeader() {
 
 function renderFooter() {
     return `
+<script>hljs.highlightAll();</script>
 </body></html>`
 }
 

@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test-render-site": "npm run build && node build/render.js examples/onepage/page.xml",
+    "test-render-site": "npm run build && node build/render.js examples/onepage/page2.xml",
     "build": "esbuild src/*.ts --outdir=build",
     "build-css": "cp resources/style.css build",
     "prep": "rm -rf build && mkdir build && ln -sf resources/style.css build/style.css",
