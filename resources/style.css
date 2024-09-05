@@ -1,0 +1,13 @@
+html, body {
+    background-color: #fdf9f4;
+    font-family: sans-serif;
+}
+body {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 1rem 1rem;
+}
+pre {
+    border: 1px solid black;
+    padding: 0.5rem 1rem;
+}

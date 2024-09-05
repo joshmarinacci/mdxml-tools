@@ -1,13 +1,117 @@
 import process from "process"
+import path from 'path'
+import {promises as fs} from "fs"
 import {make_logger} from "josh_js_util"
+// import {XMLValidator, XMLParser} from "fast-xml-parser"
+import {parseXml, XmlCdata, XmlElement, XmlText} from '@rgrove/parse-xml';
+
 const log = make_logger("RENDER")
-
-// console.log("rendering out", process.argv)
-
 const infile = process.argv[2]
+log.info("reading", infile)
+const raw_data = await fs.readFile(infile)
+const str = raw_data.toString('utf-8')
+const out = parseXml(str,{})
 
-log.info("reading",infile)
+type VisitorCallback = (e:XmlElement) => void
+type VisitorTextCallback = (e:XmlText) => void
 
+type VisitorOptions = {
+    enter: VisitorCallback,
+    text: VisitorTextCallback,
+    exit: VisitorCallback,
+}
+
+class Visitor {
+    private opts: VisitorOptions;
+    constructor(opts:VisitorOptions) {
+        this.opts = opts
+    }
+
+    visit(root: XmlElement) {
+        this._visit(root, '')
+    }
+
+    private _visit(el: XmlElement, s: string) {
+        // console.log(s,el.name)
+        this.opts.enter(el)
+        for(let ch of el.children) {
+            if(ch instanceof XmlElement) {
+                this._visit(ch,s+'  ')
+            }
+            if(ch instanceof XmlText) {
+                this.opts.text(ch)
+            }
+        }
+        this.opts.exit(el)
+    }
+}
+
+let output = ""
+
+function isInline(name: string) {
+    if(name === 'b') {
+        return true
+    }
+}
+
+
+function renderHeader() {
+    return `<html>
+<head>
+<title>doc title</title>
+<link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+`
+}
+
+function renderFooter() {
+    return `
+</body></html>`
+}
+
+const visitor = new Visitor({
+    enter: (e) => {
+        if(e.name === 'codeblock') {
+            output += "<pre><code>"
+            return
+        }
+        if(e.name === 'para') {
+            output += '<p>'
+            return
+        }
+        if(e.name === 'document') {
+            output += renderHeader()
+            return
+        }
+        output += `<${e.name}>`
+    },
+    text:(e:XmlText) => {
+        output += e.text
+    },
+    exit: (e) => {
+        if(e.name === 'codeblock') {
+            output += "</code></pre>"
+            return
+        }
+        if(e.name === 'para') {
+            output += '</p>'
+            return
+        }
+        if(e.name === 'document') {
+            output += renderFooter()
+            return
+        }
+        output += `</${e.name}>`
+    },
+})
+visitor.visit(out.children[0] as XmlElement)
+
+const BUILD_DIR = "build"
+console.log(output)
+const outfile = path.join(BUILD_DIR,path.basename(infile,path.extname(infile))+'.html')
+console.log('writing to ',outfile)
+await fs.writeFile(outfile,output)
 // setup element mapping
 // read in file
 // render to output elements

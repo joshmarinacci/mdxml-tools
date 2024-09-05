@@ -6,6 +6,8 @@
   "scripts": {
     "test-render-site": "npm run build && node build/render.js examples/onepage/page.xml",
     "build": "esbuild src/*.ts --outdir=build",
+    "build-css": "cp resources/style.css build",
+    "prep": "rm -rf build && mkdir build && ln -sf resources/style.css build/style.css",
     "tsc": "tsc",
     "test": "vitest run --dir src",
     "release-patch": "npm run build && npm version patch && npm publish"
@@ -14,7 +16,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@rgrove/parse-xml": "^4.1.0",
     "@types/node": "^22.5.3",
+    "fast-xml-parser": "^4.5.0",
     "josh_js_util": "^0.1.25"
   },
   "devDependencies": {

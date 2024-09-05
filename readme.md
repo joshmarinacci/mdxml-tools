@@ -37,7 +37,12 @@ Additions over HTML
 * `<youtube>`
 * `<supademo>`
 * `<card> <title/><body/>`
-* `<photo>`
+
+
+# open questions
+
+We focus on the semantics. How do we handle images? there are so many
+different ways they can be used. photos, diagrams, 
 
 
 
