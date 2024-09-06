@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf build",
-    "test-render-site": "npm run prep && npm run build && node build/render.js examples/embed/youtube.xml",
+    "test-render-site": "npm run prep && npm run build && node build/render.js examples/onepage/pureimage-readme.xml",
+    "test-include": "npm run prep && npm run build && node build/render.js examples/include/test.xml",
+    "test-youtube-embed": "npm run prep && npm run build && node build/render.js examples/embed/youtube.xml",
     "build": "esbuild src/*.ts --outdir=build",
     "build-css": "cp resources/style.css build",
     "prep": "rm -rf build && mkdir build && cp resources/* build/",
