@@ -87,12 +87,19 @@ const visitor = new Visitor({
             output += renderHeader()
             return
         }
+        if(e.name === 'link') {
+            console.log("Link atts",e.attributes.target)
+            output += `<a href="${e.attributes.target}">`
+        }
         output += `<${e.name}>`
     },
     text:(e:XmlText) => {
         output += e.text
     },
     exit: (e) => {
+        if(e.name === 'link') {
+            output += "</a>"
+        }
         if(e.name === 'codeblock') {
             output += "</code></pre>"
             return
@@ -111,7 +118,7 @@ const visitor = new Visitor({
 visitor.visit(out.children[0] as XmlElement)
 
 const BUILD_DIR = "build"
-console.log(output)
+// console.log(output)
 const outfile = path.join(BUILD_DIR,path.basename(infile,path.extname(infile))+'.html')
 console.log('writing to ',outfile)
 await fs.writeFile(outfile,output)

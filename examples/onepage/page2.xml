@@ -22,8 +22,7 @@ npm install pureimage
 
     <p>Make a 100x100 image, fill with red, write to png file</p>
 
-    <codeblock language="javascript">
-import * as PImage from "pureimage";
+    <codeblock language="javascript">import * as PImage from "pureimage";
 import * as fs from "fs";
 
 // make image
@@ -53,8 +52,8 @@ PImage.encodePNGToStream(img1, fs.createWriteStream("out.png"))
     <h2>supported Canvas Features</h2>
 
     <p><i>note</i>: PureImage values portability and simplicity of implementation over speed. If you need
-        maximum performance you should use a different library backed by native code, such as <a
-                href="https://www.npmjs.com/package/canvas">Node-Canvas</a>.
+        maximum performance you should use a different library backed by native code, such as <link
+                target="https://www.npmjs.com/package/canvas">Node-Canvas</link>.
     </p>
 
     <ul>
@@ -83,8 +82,8 @@ PImage.encodePNGToStream(img1, fs.createWriteStream("out.png"))
     <h1>Why?</h1>
 
     <p>There are more than enough drawing APIs out there. Why do we need another? My
-        personal hatred of C/C++ compilers is <link url="https://joshondesign.com/2014/09/17/rustlang">widely known</link>.
-        The popular Node module <link url="https://github.com/Automattic/node-canvas">Canvas.js</link> does a great
+        personal hatred of C/C++ compilers is <link target="https://joshondesign.com/2014/09/17/rustlang">widely known</link>.
+        The popular Node module <link target="https://github.com/Automattic/node-canvas">Canvas.js</link> does a great
         job, but it's backed by Cairo, a C/C++ layer. I hate having native dependencies
         in Node modules. They often don't compile, or break after a system update. They
         often don't support non-X86 architectures (like the Raspberry Pi). You have
@@ -105,9 +104,9 @@ PImage.encodePNGToStream(img1, fs.createWriteStream("out.png"))
     </p>
 
     <p>PureImage uses only pure JS dependencies.
-        <link url="https://github.com/nodebox/opentype.js/">OpenType</link>
-        for font parsing, <link url="https://github.com/niegowski/node-pngjs">PngJS</link> for PNG import/export,
-        and <link url="https://github.com/eugeneware/jpeg-js">jpeg-js</link> for JPG import/export.
+        <link target="https://github.com/nodebox/opentype.js/">OpenType</link>
+        for font parsing, <link target="https://github.com/niegowski/node-pngjs">PngJS</link> for PNG import/export,
+        and <link target="https://github.com/eugeneware/jpeg-js">jpeg-js</link> for JPG import/export.
     </p>
 
 </document>

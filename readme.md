@@ -44,5 +44,5 @@ Additions over HTML
 We focus on the semantics. How do we handle images? there are so many
 different ways they can be used. photos, diagrams, 
 
-
+How are links defined? <link target={url}/>
 

@@ -1,13 +1,38 @@
 html, body {
-    background-color: #fdf9f4;
+    background-color: #ffffff;
     font-family: sans-serif;
+    line-height: 150%;
+
+    color: #1f2328;
+    --border-color-muted: #d1d9e0b3;
 }
 body {
     max-width: 40rem;
     margin: 0 auto;
-    padding: 1rem 1rem;
+    padding: 3rem 1rem 1rem 1rem;
 }
 pre {
     border: 1px solid black;
 /*    padding: 0.5rem 1rem;*/
+}
+pre code.hljs {
+    line-height: 130%;
+}
+
+p code {
+    background-color: #f0f0f0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.2rem;
+}
+
+h1 {
+    padding-bottom: 0.3em;
+    font-size: 2em;
+    border-bottom: 1px solid var(--border-color-muted);
+}
+
+a {
+    color: blue;
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
 }
