@@ -119,6 +119,12 @@ const visitor = new Visitor({
         }
         if(e.name === 'include') return
         if(e.name === 'fragment') return
+        if(e.name === 'youtube') {
+            output += `
+<iframe id="ytplayer" type="text/html" width="720" height="405"
+src="https://www.youtube.com/embed/${e.attributes.embed}"
+ allowfullscreen>`
+        }
         output += `<${e.name}>`
     },
     text:async (e:XmlText) => {
