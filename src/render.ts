@@ -12,8 +12,8 @@ const raw_data = await fs.readFile(infile)
 const str = raw_data.toString('utf-8')
 const out = parseXml(str,{})
 
-type VisitorCallback = (e:XmlElement) => void
-type VisitorTextCallback = (e:XmlText) => void
+type VisitorCallback = (e:XmlElement) => Promise<void>
+type VisitorTextCallback = (e:XmlText) => Promise<void>
 
 type VisitorOptions = {
     enter: VisitorCallback,
@@ -27,33 +27,26 @@ class Visitor {
         this.opts = opts
     }
 
-    visit(root: XmlElement) {
-        this._visit(root, '')
+    async visit(root: XmlElement) {
+        await this._visit(root, '')
     }
 
-    private _visit(el: XmlElement, s: string) {
+    private async _visit(el: XmlElement, s: string) {
         // console.log(s,el.name)
-        this.opts.enter(el)
+        await this.opts.enter(el)
         for(let ch of el.children) {
             if(ch instanceof XmlElement) {
-                this._visit(ch,s+'  ')
+                await this._visit(ch,s+'  ')
             }
             if(ch instanceof XmlText) {
-                this.opts.text(ch)
+                await this.opts.text(ch)
             }
         }
-        this.opts.exit(el)
+        await this.opts.exit(el)
     }
 }
 
 let output = ""
-
-function isInline(name: string) {
-    if(name === 'b') {
-        return true
-    }
-}
-
 
 function renderHeader() {
     return `<html>
@@ -73,8 +66,39 @@ function renderFooter() {
 </body></html>`
 }
 
+async function streamInclude(src: string) {
+    const base = path.dirname(infile)
+    const pth = path.join(base,src)
+    console.log("base is",base)
+    console.log("loading", pth)
+    let include = await fs.readFile(pth,'utf-8')
+    console.log("including",include)
+    const out = parseXml(include)
+    // console.log("out is",out)
+    return out
+}
+
+await new Visitor({
+    enter:async (e) => {
+        if(e.name === 'include') {
+            console.log("entering",e.name)
+            let frag = await streamInclude(e.attributes.src)
+            for(let v of frag.children) {
+                // console.log("inserting",v)
+                e.children.push(v)
+            }
+        }
+    },
+    text: async (e) => {
+
+    },
+    exit: async (e) => {
+
+    }
+}).visit(out.children[0] as XmlElement)
+
 const visitor = new Visitor({
-    enter: (e) => {
+    enter: async (e) => {
         if(e.name === 'codeblock') {
             output += "<pre><code>"
             return
@@ -93,12 +117,16 @@ const visitor = new Visitor({
         if(e.name === 'link') {
             output += `<a href="${e.attributes.target}">`
         }
+        if(e.name === 'include') return
+        if(e.name === 'fragment') return
         output += `<${e.name}>`
     },
-    text:(e:XmlText) => {
+    text:async (e:XmlText) => {
         output += e.text
     },
-    exit: (e) => {
+    exit: async (e) => {
+        if(e.name === 'include') return
+        if(e.name === 'fragment') return
         if(e.name === 'link') {
             output += "</a>"
         }
@@ -117,12 +145,12 @@ const visitor = new Visitor({
         output += `</${e.name}>`
     },
 })
-visitor.visit(out.children[0] as XmlElement)
+await visitor.visit(out.children[0] as XmlElement)
 
 const BUILD_DIR = "build"
 // console.log(output)
 const outfile = path.join(BUILD_DIR,path.basename(infile,path.extname(infile))+'.html')
-console.log('writing to ',outfile)
+// console.log('writing to ',outfile)
 await fs.writeFile(outfile,output)
 // setup element mapping
 // read in file

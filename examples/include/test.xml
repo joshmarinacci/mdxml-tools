@@ -1,0 +1,9 @@
+<document>
+    <h1>Include test</h1>
+
+    <p>This is a paragraph before the include</p>
+
+    <include src="brand.xml"/>
+
+    <p>this is a paragraph after the include</p>
+</document>
