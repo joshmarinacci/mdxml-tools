@@ -47,7 +47,7 @@ PImage.encodePNGToStream(img1, fs.createWriteStream("out.png"))
 
     <p>result</p>
 
-    <image title="red square" src="./images/redsquare.png"/>
+    <image title="red square" src="./redsquare.png"/>
 
     <h2>supported Canvas Features</h2>
 

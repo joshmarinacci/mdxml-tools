@@ -87,8 +87,10 @@ const visitor = new Visitor({
             output += renderHeader()
             return
         }
+        if(e.name === 'image') {
+            output += `<img src="${e.attributes.src}" title="${e.attributes.title}"/>`
+        }
         if(e.name === 'link') {
-            console.log("Link atts",e.attributes.target)
             output += `<a href="${e.attributes.target}">`
         }
         output += `<${e.name}>`
