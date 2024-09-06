@@ -85,7 +85,9 @@ await new Visitor({
             let frag = await streamInclude(e.attributes.src)
             for(let v of frag.children) {
                 // console.log("inserting",v)
-                e.children.push(v)
+                if(v instanceof XmlElement) {
+                    e.children.push(v)
+                }
             }
         }
     },
