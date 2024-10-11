@@ -8,6 +8,7 @@
     "test-render-site": "npm run prep && npm run build && node build/render.js examples/onepage/pureimage-readme.xml",
     "test-include": "npm run prep && npm run build && node build/render.js examples/include/test.xml",
     "test-youtube-embed": "npm run prep && npm run build && node build/render.js examples/embed/youtube.xml",
+    "test-shiki": "npm run prep && npm run build && node build/shiki-test.js",
     "build": "esbuild src/*.ts --outdir=build",
     "build-css": "cp resources/style.css build",
     "prep": "rm -rf build && mkdir build && cp resources/* build/",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "esbuild": "^0.23.0",
     "typescript": "^5.5.4",
-    "vitest": "^1.4.0"
+    "vitest": "^1.4.0",
+    "shiki": "^1.22.0"
   }
 }

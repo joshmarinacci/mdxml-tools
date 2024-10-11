@@ -4,6 +4,7 @@ import {promises as fs} from "fs"
 import {make_logger} from "josh_js_util"
 // import {XMLValidator, XMLParser} from "fast-xml-parser"
 import {parseXml, XmlCdata, XmlElement, XmlText} from '@rgrove/parse-xml';
+import {codeToHtml} from "shiki";
 
 const log = make_logger("RENDER")
 const infile = process.argv[2]
@@ -53,8 +54,8 @@ function renderHeader() {
 <head>
     <title>doc title</title>
     <link rel="stylesheet" href="./style.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>-->
 </head>
 <body>
 `
@@ -99,10 +100,14 @@ await new Visitor({
     }
 }).visit(out.children[0] as XmlElement)
 
+let inside_codeblock = false
+let codeblock_text = ""
 const visitor = new Visitor({
     enter: async (e) => {
         if(e.name === 'codeblock') {
-            output += "<pre><code>"
+            // output += "<pre><code>"
+            console.log("entering codeblock")
+            inside_codeblock = true
             return
         }
         if(e.name === 'para') {
@@ -130,6 +135,11 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
         output += `<${e.name}>`
     },
     text:async (e:XmlText) => {
+        if(inside_codeblock) {
+            console.log('inside code block')
+            codeblock_text = e.text
+            return
+        }
         output += e.text
     },
     exit: async (e) => {
@@ -139,7 +149,17 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
             output += "</a>"
         }
         if(e.name === 'codeblock') {
-            output += "</code></pre>"
+            console.log('exiting codeblock')
+            inside_codeblock = false
+            // console.log("code is", codeblock_text)
+            const html = await codeToHtml(codeblock_text, {
+                lang:'javascript',
+                theme:'vitesse-dark',
+            })
+            // console.log("HTML is",html)
+            codeblock_text = ""
+            output += html
+            // output += "</code></pre>"
             return
         }
         if(e.name === 'para') {
