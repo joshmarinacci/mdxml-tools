@@ -124,13 +124,9 @@ const toc_finder = new Visitor({
 
     }
 })
-
 await toc_finder.visit(out.children[0] as XmlElement)
 
-console.log("final TOC is",TOC)
-
 function renderTOC(toc: TOCEntry[]) {
-    console.log("rendering toc",toc)
     return `<ul class="toc">${toc.map(entry => `<li>${entry[1]}</li>`).join("\n")}</ul>`
 }
 
@@ -157,7 +153,7 @@ const render = new Visitor({
             return
         }
         if(e.name === 'image') {
-            output += `<img src="${e.attributes.src}" title="${e.attributes.title}"/>`
+            output += `<figure><img src="${e.attributes.src}" title="${e.attributes.title}"/><figcaption>${e.attributes.title}</figcaption></figure>`
         }
         if(e.name === 'link') {
             output += `<a href="${e.attributes.target}">`
@@ -208,13 +204,5 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
 await render.visit(out.children[0] as XmlElement)
 
 const BUILD_DIR = "build"
-// console.log(output)
 const outfile = path.join(BUILD_DIR,path.basename(infile,path.extname(infile))+'.html')
-// console.log('writing to ',outfile)
 await fs.writeFile(outfile,output)
-// setup element mapping
-// read in file
-// render to output elements
-// flatten output elements to HTML string
-// load HTML output template
-// save template to disk
