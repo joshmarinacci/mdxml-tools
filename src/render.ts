@@ -63,7 +63,7 @@ function renderHeader() {
 
 function renderFooter() {
     return `
-<script>hljs.highlightAll();</script>
+<!--<script>hljs.highlightAll();</script>-->
 </body></html>`
 }
 
@@ -101,13 +101,25 @@ await new Visitor({
 }).visit(out.children[0] as XmlElement)
 
 let inside_codeblock = false
-let codeblock_text = ""
+
+function childrenToText(e: XmlElement) {
+    return e.children.map(ch => {
+        if(ch instanceof XmlText) {
+            return ch.text
+        }
+    }).join("")
+}
+
+// let codeblock_text = ""
 const visitor = new Visitor({
     enter: async (e) => {
         if(e.name === 'codeblock') {
-            // output += "<pre><code>"
-            console.log("entering codeblock")
+            const text:string = childrenToText(e)
             inside_codeblock = true
+            output += await codeToHtml(text, {
+                lang:e.attributes.language,
+                theme:'vitesse-dark',
+            })
             return
         }
         if(e.name === 'para') {
@@ -137,7 +149,7 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
     text:async (e:XmlText) => {
         if(inside_codeblock) {
             console.log('inside code block')
-            codeblock_text = e.text
+            // codeblock_text = e.text
             return
         }
         output += e.text
@@ -151,14 +163,8 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
         if(e.name === 'codeblock') {
             console.log('exiting codeblock')
             inside_codeblock = false
-            // console.log("code is", codeblock_text)
-            const html = await codeToHtml(codeblock_text, {
-                lang:'javascript',
-                theme:'vitesse-dark',
-            })
-            // console.log("HTML is",html)
-            codeblock_text = ""
-            output += html
+            // codeblock_text = ""
+            // output += html
             // output += "</code></pre>"
             return
         }
