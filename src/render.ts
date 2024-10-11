@@ -110,7 +110,31 @@ function childrenToText(e: XmlElement) {
     }).join("")
 }
 
-const visitor = new Visitor({
+
+type TOCEntry = [string,string]
+const TOC:TOCEntry[] = []
+const toc_finder = new Visitor({
+    enter:async (e) => {
+        if(e.name === 'h1') TOC.push([e.name,childrenToText(e)])
+        if(e.name === 'h2') TOC.push([e.name,childrenToText(e)])
+        if(e.name === 'h3') TOC.push([e.name,childrenToText(e)])
+    },
+    text: async (e) => {},
+    exit: async (e) => {
+
+    }
+})
+
+await toc_finder.visit(out.children[0] as XmlElement)
+
+console.log("final TOC is",TOC)
+
+function renderTOC(toc: TOCEntry[]) {
+    console.log("rendering toc",toc)
+    return `<ul class="toc">${toc.map(entry => `<li>${entry[1]}</li>`).join("\n")}</ul>`
+}
+
+const render = new Visitor({
     enter: async (e) => {
         if(e.name === 'codeblock') {
             const text:string = childrenToText(e)
@@ -129,6 +153,7 @@ const visitor = new Visitor({
         }
         if(e.name === 'document') {
             output += renderHeader()
+            output += renderTOC(TOC)
             return
         }
         if(e.name === 'image') {
@@ -180,7 +205,7 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
         output += `</${e.name}>`
     },
 })
-await visitor.visit(out.children[0] as XmlElement)
+await render.visit(out.children[0] as XmlElement)
 
 const BUILD_DIR = "build"
 // console.log(output)
