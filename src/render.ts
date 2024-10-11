@@ -110,16 +110,17 @@ function childrenToText(e: XmlElement) {
     }).join("")
 }
 
-// let codeblock_text = ""
 const visitor = new Visitor({
     enter: async (e) => {
         if(e.name === 'codeblock') {
             const text:string = childrenToText(e)
             inside_codeblock = true
-            output += await codeToHtml(text, {
+            let html = await codeToHtml(text, {
                 lang:e.attributes.language,
                 theme:'vitesse-dark',
             })
+
+            output += `<div class='codeblock-wrapper'><button class="codeblock-button">Copy Code</button>${html}</div>`
             return
         }
         if(e.name === 'para') {

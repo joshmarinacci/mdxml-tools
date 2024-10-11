@@ -17,6 +17,21 @@ pre.shiki {
 }
 pre.shiki {
     line-height: 130%;
+    margin:0;
+}
+
+.codeblock-wrapper {
+    border:1px solid black;
+    background-color: #4C9A91;
+    color: #666666;
+    padding:0;
+    margin:0;
+    position: relative;
+}
+.codeblock-wrapper .codeblock-button {
+    position: absolute;
+    right:0;
+    top:0;
 }
 
 p code {
