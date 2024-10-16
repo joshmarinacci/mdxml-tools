@@ -60,3 +60,8 @@ a {
     text-decoration: underline;
     text-underline-offset: 0.2rem;
 }
+
+
+.highlighted-word {
+    border: 5px solid red;
+}

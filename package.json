@@ -11,6 +11,7 @@
     "test-shiki": "npm run prep && npm run build && node build/shiki-test.js",
     "build": "esbuild src/*.ts --outdir=build",
     "build-css": "cp resources/style.css build",
+    "serve": "npx http-server build",
     "prep": "rm -rf build && mkdir build && cp resources/* build/",
     "tsc": "tsc",
     "test": "vitest run --dir src",
@@ -27,8 +28,8 @@
   },
   "devDependencies": {
     "esbuild": "^0.23.0",
+    "shiki": "^1.22.0",
     "typescript": "^5.5.4",
-    "vitest": "^1.4.0",
-    "shiki": "^1.22.0"
+    "vitest": "^1.4.0"
   }
 }

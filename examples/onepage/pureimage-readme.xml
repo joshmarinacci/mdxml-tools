@@ -15,7 +15,7 @@
     <h1>Installation</h1>
 
     <codeblock language="bash">
-npm install pureimage
+npm <i>install</i> pureimage
     </codeblock>
 
     <h1>Simple example</h1>

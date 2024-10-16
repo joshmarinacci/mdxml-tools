@@ -11,7 +11,9 @@ const infile = process.argv[2]
 log.info("reading", infile)
 const raw_data = await fs.readFile(infile)
 const str = raw_data.toString('utf-8')
-const out = parseXml(str,{})
+const out = parseXml(str,{
+    includeOffsets:true
+})
 
 type VisitorCallback = (e:XmlElement) => Promise<void>
 type VisitorTextCallback = (e:XmlText) => Promise<void>
@@ -102,12 +104,28 @@ await new Visitor({
 
 let inside_codeblock = false
 
-function childrenToText(e: XmlElement) {
-    return e.children.map(ch => {
+type CodeDecoration = {
+    start:number,
+    end:number,
+}
+function childrenToText(e: XmlElement):[string,CodeDecoration[]] {
+    let decs:CodeDecoration[] = []
+    let totalText = ""
+    e.children.forEach(ch => {
         if(ch instanceof XmlText) {
-            return ch.text
+            totalText += ch.text
+            return
         }
-    }).join("")
+        if(ch instanceof XmlElement) {
+            let [text] = childrenToText(ch)
+            decs.push({
+                start:totalText.length,
+                end: totalText.length + text.length,
+            })
+            totalText += text
+        }
+    })
+    return [totalText, decs]
 }
 
 
@@ -115,9 +133,9 @@ type TOCEntry = [string,string]
 const TOC:TOCEntry[] = []
 const toc_finder = new Visitor({
     enter:async (e) => {
-        if(e.name === 'h1') TOC.push([e.name,childrenToText(e)])
-        if(e.name === 'h2') TOC.push([e.name,childrenToText(e)])
-        if(e.name === 'h3') TOC.push([e.name,childrenToText(e)])
+        if(e.name === 'h1') TOC.push([e.name,childrenToText(e)[0]])
+        if(e.name === 'h2') TOC.push([e.name,childrenToText(e)[0]])
+        if(e.name === 'h3') TOC.push([e.name,childrenToText(e)[0]])
     },
     text: async (e) => {},
     exit: async (e) => {
@@ -133,14 +151,20 @@ function renderTOC(toc: TOCEntry[]) {
 const render = new Visitor({
     enter: async (e) => {
         if(e.name === 'codeblock') {
-            const text:string = childrenToText(e)
+            const [text,decs] = childrenToText(e)
+            console.log('code block decs',decs,'--',text,'--')
             inside_codeblock = true
             let html = await codeToHtml(text, {
                 lang:e.attributes.language,
-                theme:'vitesse-dark',
+                theme:'vitesse-light',
+                decorations: decs.map(dec => ({
+                    start:dec.start,
+                    end:dec.end,
+                    properties: { class: 'highlighted-word' }
+                }))
             })
 
-            output += `<div class='codeblock-wrapper'><button class="codeblock-button">Copy Code</button>${html}</div>`
+            output += `yowza <div class='codeblock-wrapper'><button class="codeblock-button">Copy Code</button>${html}</div>`
             return
         }
         if(e.name === 'para') {
@@ -170,7 +194,7 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
     },
     text:async (e:XmlText) => {
         if(inside_codeblock) {
-            console.log('inside code block')
+            // console.log('inside code block', e.text)
             // codeblock_text = e.text
             return
         }
