@@ -9,6 +9,7 @@
     "test-render-features": "npm run prep && npm run build && node build/render.js examples/features/features.xml",
     "test-include": "npm run prep && npm run build && node build/render.js examples/include/test.xml",
     "test-youtube-embed": "npm run prep && npm run build && node build/render.js examples/embed/youtube.xml",
+    "render": "npm run prep && npm run build && node build/render.js",
     "test-shiki": "npm run prep && npm run build && node build/shiki-test.js",
     "build": "esbuild src/*.ts --outdir=build",
     "build-css": "cp resources/style.css build",
