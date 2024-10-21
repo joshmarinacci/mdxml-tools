@@ -7,16 +7,19 @@ html, body {
     --border-color-muted: #d1d9e0b3;
 }
 body {
-    max-width: 40rem;
-    margin: 0 auto;
-    padding: 3rem 1rem 1rem 1rem;
+    /*max-width: 40rem;*/
+    /*margin: 0 auto;*/
+    /*padding: 3rem 1rem 1rem 1rem;*/
+    /*display: grid;*/
+    /*grid-template-columns: 1fr 2fr;*/
+    position: relative;
 }
 
-ul.toc {
-    border: 1px solid black;
-    position: absolute;
+.toc {
+    list-style: none;
+    border: 0px solid black;
+    position: sticky;
     top: 10px;
-    right: 20px;
     background-color: #ffffff;
 }
 pre.shiki {

@@ -145,7 +145,7 @@ const toc_finder = new Visitor({
 await toc_finder.visit(out.children[0] as XmlElement)
 
 function renderTOC(toc: TOCEntry[]) {
-    return `<ul class="toc">${toc.map(entry => `<li>${entry[1]}</li>`).join("\n")}</ul>`
+    return `<nav class="toc">${toc.map(entry => `<li>${entry[1]}</li>`).join("\n")}</nav>`
 }
 
 const render = new Visitor({
@@ -174,6 +174,7 @@ const render = new Visitor({
         if(e.name === 'document') {
             output += renderHeader()
             output += renderTOC(TOC)
+            output += '<article>'
             return
         }
         if(e.name === 'image') {
@@ -219,6 +220,7 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
             return
         }
         if(e.name === 'document') {
+            output += '</article>'
             output += renderFooter()
             return
         }
