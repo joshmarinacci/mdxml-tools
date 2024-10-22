@@ -2,49 +2,39 @@ import {parseXml, XmlElement, XmlText} from "@rgrove/parse-xml";
 // import path from "path";
 // import {promises as fs} from "fs";
 import {codeToHtml} from "shiki";
+type VisitorCallback = (e:XmlElement) => Promise<void>
+type VisitorTextCallback = (e:XmlText) => Promise<void>
+type VisitorOptions = {
+    enter: VisitorCallback,
+    text: VisitorTextCallback,
+    exit: VisitorCallback,
+}
 
-export async function doRender(str:string) {
-    const out = parseXml(str,{
-        includeOffsets:true
-    })
 
-    type VisitorCallback = (e:XmlElement) => Promise<void>
-    type VisitorTextCallback = (e:XmlText) => Promise<void>
-    type VisitorOptions = {
-        enter: VisitorCallback,
-        text: VisitorTextCallback,
-        exit: VisitorCallback,
+class Visitor {
+    private opts: VisitorOptions;
+    constructor(opts:VisitorOptions) {
+        this.opts = opts
     }
-
-    class Visitor {
-        private opts: VisitorOptions;
-        constructor(opts:VisitorOptions) {
-            this.opts = opts
-        }
-
-        async visit(root: XmlElement) {
-            await this._visit(root, '')
-        }
-
-        private async _visit(el: XmlElement, s: string) {
-            // console.log(s,el.name)
-            await this.opts.enter(el)
-            for(let ch of el.children) {
-                if(ch instanceof XmlElement) {
-                    await this._visit(ch,s+'  ')
-                }
-                if(ch instanceof XmlText) {
-                    await this.opts.text(ch)
-                }
+    async visit(root: XmlElement) {
+        await this._visit(root, '')
+    }
+    private async _visit(el: XmlElement, s: string) {
+        // console.log(s,el.name)
+        await this.opts.enter(el)
+        for(let ch of el.children) {
+            if(ch instanceof XmlElement) {
+                await this._visit(ch,s+'  ')
             }
-            await this.opts.exit(el)
+            if(ch instanceof XmlText) {
+                await this.opts.text(ch)
+            }
         }
+        await this.opts.exit(el)
     }
-
-    let output = ""
-
-    function renderHeader() {
-        return `<html>
+}
+function renderHeader() {
+    return `<html>
 <head>
     <title>doc title</title>
     <link rel="stylesheet" href="./style.css"/>
@@ -53,75 +43,41 @@ export async function doRender(str:string) {
 </head>
 <body>
 `
-    }
-
-    function renderFooter() {
-        return `
+}
+function renderFooter() {
+    return `
 <!--<script>hljs.highlightAll();</script>-->
 </body></html>`
-    }
+}
+function renderTOC(toc: TOCEntry[]) {
+    return `<nav class="toc">${toc.map(entry => `<li>${entry[1]}</li>`).join("\n")}</nav>`
+}
 
-    // async function streamInclude(src: string) {
-    //     const base = path.dirname(infile)
-    //     const pth = path.join(base,src)
-    //     console.log("base is",base)
-    //     console.log("loading", pth)
-    //     let include = await fs.readFile(pth,'utf-8')
-    //     console.log("including",include)
-    //     const out = parseXml(include)
-    //     // console.log("out is",out)
-    //     return out
-    // }
-
-    await new Visitor({
-        enter:async (e) => {
-            // if(e.name === 'include') {
-            //     console.log("entering",e.name)
-            //     let frag = await streamInclude(e.attributes.src)
-            //     for(let v of frag.children) {
-            //         // console.log("inserting",v)
-            //         if(v instanceof XmlElement) {
-            //             e.children.push(v)
-            //         }
-            //     }
-            // }
-        },
-        text: async (e) => {
-
-        },
-        exit: async (e) => {
-
+type CodeDecoration = {
+    start:number,
+    end:number,
+}
+function childrenToText(e: XmlElement):[string,CodeDecoration[]] {
+    let decs:CodeDecoration[] = []
+    let totalText = ""
+    e.children.forEach(ch => {
+        if(ch instanceof XmlText) {
+            totalText += ch.text
+            return
         }
-    }).visit(out.children[0] as XmlElement)
-
-    let inside_codeblock = false
-
-    type CodeDecoration = {
-        start:number,
-        end:number,
-    }
-    function childrenToText(e: XmlElement):[string,CodeDecoration[]] {
-        let decs:CodeDecoration[] = []
-        let totalText = ""
-        e.children.forEach(ch => {
-            if(ch instanceof XmlText) {
-                totalText += ch.text
-                return
-            }
-            if(ch instanceof XmlElement) {
-                let [text] = childrenToText(ch)
-                decs.push({
-                    start:totalText.length,
-                    end: totalText.length + text.length,
-                })
-                totalText += text
-            }
-        })
-        return [totalText, decs]
-    }
-
-
-    type TOCEntry = [string,string]
+        if(ch instanceof XmlElement) {
+            let [text] = childrenToText(ch)
+            decs.push({
+                start:totalText.length,
+                end: totalText.length + text.length,
+            })
+            totalText += text
+        }
+    })
+    return [totalText, decs]
+}
+type TOCEntry = [string,string]
+async function find_toc(root: XmlElement) {
     const TOC:TOCEntry[] = []
     const toc_finder = new Visitor({
         enter:async (e) => {
@@ -130,16 +86,14 @@ export async function doRender(str:string) {
             if(e.name === 'h3') TOC.push([e.name,childrenToText(e)[0]])
         },
         text: async (e) => {},
-        exit: async (e) => {
-
-        }
+        exit: async (e) => {}
     })
-    await toc_finder.visit(out.children[0] as XmlElement)
-
-    function renderTOC(toc: TOCEntry[]) {
-        return `<nav class="toc">${toc.map(entry => `<li>${entry[1]}</li>`).join("\n")}</nav>`
-    }
-
+    await toc_finder.visit(root)
+    return TOC
+}
+async function renderToHtml(root: XmlElement, TOC: TOCEntry[]) {
+    let output = ""
+    let inside_codeblock = false
     const render = new Visitor({
         enter: async (e) => {
             if(e.name === 'codeblock') {
@@ -219,6 +173,50 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
             output += `</${e.name}>`
         },
     })
-    await render.visit(out.children[0] as XmlElement)
+    await render.visit(root)
     return output
+}
+export async function doRender(str:string) {
+    const out = parseXml(str,{
+        includeOffsets:true
+    })
+    const root = out.children[0] as XmlElement
+
+
+    // async function streamInclude(src: string) {
+    //     const base = path.dirname(infile)
+    //     const pth = path.join(base,src)
+    //     console.log("base is",base)
+    //     console.log("loading", pth)
+    //     let include = await fs.readFile(pth,'utf-8')
+    //     console.log("including",include)
+    //     const out = parseXml(include)
+    //     // console.log("out is",out)
+    //     return out
+    // }
+
+    // await new Visitor({
+    //     enter:async (e) => {
+    //         // if(e.name === 'include') {
+    //         //     console.log("entering",e.name)
+    //         //     let frag = await streamInclude(e.attributes.src)
+    //         //     for(let v of frag.children) {
+    //         //         // console.log("inserting",v)
+    //         //         if(v instanceof XmlElement) {
+    //         //             e.children.push(v)
+    //         //         }
+    //         //     }
+    //         // }
+    //     },
+    //     text: async (e) => {
+    //
+    //     },
+    //     exit: async (e) => {
+    //
+    //     }
+    // }).visit(out.children[0] as XmlElement)
+
+    const TOC = await find_toc(root)
+
+    return renderToHtml(root,TOC)
 }
