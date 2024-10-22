@@ -4,8 +4,10 @@
   "main": "index.js",
   "type": "module",
   "files": [
-    "build/*.js"
+    "build/*.js",
+    "build/*.d.ts"
   ],
+  "types": "build/lib.d.ts",
   "scripts": {
     "clean": "rm -rf build",
     "test-render-site": "npm run prep && npm run build && node build/render.js examples/onepage/pureimage-readme.xml",
