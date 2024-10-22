@@ -9,12 +9,8 @@
   ],
   "scripts": {
     "clean": "rm -rf build",
-    "render": "npm run prep && npm run build && node build/render.js",
+    "render": "npm run build && node build/cli.js --serve=true --outdir=temp --infile=examples/features/features.xml --resources=resources",
     "build": "npm run clean && node build.js",
-    "build-lib": "npm run clean && npm run build && npm run tsc",
-    "build-css": "cp resources/style.css build",
-    "serve": "npx http-server build",
-    "prep": "rm -rf build && mkdir build && cp resources/* build/",
     "tsc": "tsc",
     "test": "vitest run --dir src",
     "release-patch": "npm run build && npm version patch && npm publish"
@@ -25,10 +21,13 @@
   "dependencies": {
     "@rgrove/parse-xml": "^4.1.0",
     "@types/node": "^22.5.3",
+    "express": "^4.21.1",
     "fast-xml-parser": "^4.5.0",
-    "josh_js_util": "^0.1.25"
+    "josh_js_util": "^0.1.25",
+    "josh_node_util": "^0.0.4"
   },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "esbuild": "^0.23.0",
     "npm-dts": "^1.3.13",
     "shiki": "^1.22.0",

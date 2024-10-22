@@ -3,16 +3,17 @@
 
     <h2>level 2 header</h2>
 
-    <p>a paragraph</p>
+    <p>A paragraph with <strong>strong</strong>, <emphasis>emphasized</emphasis> text,
+    and also some <code>inline code</code></p>
 
     <codeblock language="bash">
-        codeblock with <i>highlighting</i>
+        echo "bash code with <i>highlighting</i>"
     </codeblock>
 
 
     <image title="embedded image" src="./redsquare.png"/>
 
-    <h3>unordered item list</h3>
+    <h3>Unordered item list</h3>
     <ul>
         <li>first item</li>
         <li>second item</li>

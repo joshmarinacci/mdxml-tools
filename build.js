@@ -4,15 +4,19 @@ const { Generator } = pkg;
 
 async function go() {
     const sharedConfig = {
-        entryPoints: ["src/index.ts"],
-        bundle: true,
+        entryPoints: ["src/cli.ts"],
+        bundle: false,
         minify: false,
     };
 
-    await new Generator({
-        entry: "src/index.ts",
-        output: "build/index.d.ts",
-    }).generate();
+    // await new Generator({
+    //     entry: "src/cli.ts",
+    //     output: "build/cli.d.ts",
+    // }).generate();
+    // await new Generator({
+    //     entry: "src/render.ts",
+    //     output: "build/render.d.ts",
+    // }).generate();
 
     // await build({
     //     ...sharedConfig,
@@ -22,11 +26,13 @@ async function go() {
     // });
 
     await build({
-        ...sharedConfig,
-        platform: "neutral",
+        // ...sharedConfig,
+        entryPoints: ["src/cli.ts","src/render.ts"],
+        platform: "node",
         format: "esm",
-        outfile: "build/index.esm.js",
-        external:["rtds-core","react","react-dom","@rgrove/parse-xml"],
+        outdir:"build",
+        // outfile: "build/cli.esm.js",
+        // external:["rtds-core","react","react-dom","@rgrove/parse-xml","node:path"],
     });
 }
 
