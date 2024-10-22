@@ -1,21 +1,16 @@
 {
   "name": "mdxml-tools",
   "version": "0.0.6",
-  "main": "index.js",
   "type": "module",
+  "types": "build/lib.d.ts",
+  "module": "build/index.esm.js",
   "files": [
     "build/*"
   ],
-  "types": "build/lib.d.ts",
   "scripts": {
     "clean": "rm -rf build",
-    "test-render-site": "npm run prep && npm run build && node build/render.js examples/onepage/pureimage-readme.xml",
-    "test-render-features": "npm run prep && npm run build && node build/render.js examples/features/features.xml",
-    "test-include": "npm run prep && npm run build && node build/render.js examples/include/test.xml",
-    "test-youtube-embed": "npm run prep && npm run build && node build/render.js examples/embed/youtube.xml",
     "render": "npm run prep && npm run build && node build/render.js",
-    "test-shiki": "npm run prep && npm run build && node build/shiki-test.js",
-    "build": "esbuild src/lib.ts --outdir=build",
+    "build": "npm run clean && node build.js",
     "build-lib": "npm run clean && npm run build && npm run tsc",
     "build-css": "cp resources/style.css build",
     "serve": "npx http-server build",
@@ -35,6 +30,7 @@
   },
   "devDependencies": {
     "esbuild": "^0.23.0",
+    "npm-dts": "^1.3.13",
     "shiki": "^1.22.0",
     "typescript": "^5.5.4",
     "vitest": "^1.4.0"
