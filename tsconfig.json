@@ -1,24 +1,25 @@
 {
   "compilerOptions": {
-//    "allowJs": false,
+    //    "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "sourceMap": true,
     "declarationDir": "./build",
     "emitDeclarationOnly": true,
-//    "esModuleInterop": true,
-//    "forceConsistentCasingInFileNames": true,
-//    "isolatedModules": true,
-//    "jsx": "react-jsx",
-//    "lib": [
-//      "dom",
-//      "dom.iterable",
-//      "esnext"
-//    ],
+    "isolatedModules": true,
     "module": "esnext",
+    //    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    //    "isolatedModules": true,
+    //    "jsx": "react-jsx",
+    //    "lib": [
+    //      "dom",
+    //      "dom.iterable",
+    //      "esnext"
+    //    ],
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "outDir": "./build",
+    "sourceMap": true,
     "strict": true,
     "target": "ESNext"
   },
