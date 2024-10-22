@@ -2,7 +2,7 @@ import process from "process"
 import path from 'path'
 import {promises as fs} from "fs"
 import {make_logger} from "josh_js_util"
-import {doRender} from "./lib.js";
+import {doRender} from "./index.js";
 
 const log = make_logger("RENDER")
 const infile = process.argv[2]
