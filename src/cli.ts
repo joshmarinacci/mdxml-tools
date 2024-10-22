@@ -6,14 +6,24 @@ import {make_logger} from "josh_js_util"
 import {mkdir} from "josh_node_util"
 import {doRender} from "./render.js";
 
+
+type CLIOpts = {
+    values: {
+        resources:string
+        infile:string
+        outdir:string
+        serve:boolean
+    }
+}
+
+
 const log = make_logger("RENDER")
 
-// const args = ['--serve','--outdir','--infile','--resources']
-
-const opts = parseArgs({
+const opts = (parseArgs({
+    strict:true,
     options: {
         serve: {
-            type: 'string'
+            type: 'string',
         },
         outdir: {
             type: 'string'
@@ -25,7 +35,7 @@ const opts = parseArgs({
             type:'string'
         }
     }
-})
+}) as unknown as CLIOpts)
 console.log("parsed the args",opts)
 
 // make dir
