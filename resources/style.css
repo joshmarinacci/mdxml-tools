@@ -1,27 +1,57 @@
+/*    defaults       */
 html, body {
     background-color: #ffffff;
     font-family: sans-serif;
     line-height: 150%;
-
     color: #1f2328;
     --border-color-muted: #d1d9e0b3;
 }
 body {
-    /*max-width: 40rem;*/
-    /*margin: 0 auto;*/
-    /*padding: 3rem 1rem 1rem 1rem;*/
-    /*display: grid;*/
-    /*grid-template-columns: 1fr 2fr;*/
     position: relative;
 }
 
-.toc {
-    list-style: none;
-    border: 0px solid black;
-    position: sticky;
-    top: 10px;
-    background-color: #ffffff;
+/*    layout   */
+article {
+    margin: 0 auto;
+    max-width: 40rem;
+    padding:0;
 }
+nav {
+    position: absolute;
+    max-width: 10rem;
+    left: 0;
+    top:0;
+}
+
+
+/* TOC formatting */
+nav {
+    list-style: none;
+    padding:0;
+}
+nav li {
+    border: 1px solid blue;
+    background-color: crimson;
+}
+nav li:hover {
+    background-color: lightblue;
+}
+
+/* headers */
+h1, h2,h3 {
+    padding: 0.5rem 0;
+}
+h1 {
+    font-size: 2rem;
+}
+h2 {
+    font-size: 1.5rem;
+}
+h3 {
+    font-size: 1.25rem;
+}
+
+/* code blocks */
 pre.shiki {
     border: 1px solid black;
     padding: 0.5rem 1rem;
@@ -30,7 +60,6 @@ pre.shiki {
     line-height: 130%;
     margin:0;
 }
-
 .codeblock-wrapper {
     border:1px solid black;
     background-color: #4C9A91;
@@ -44,19 +73,18 @@ pre.shiki {
     right:0;
     top:0;
 }
-
 p code {
     background-color: #f0f0f0;
     padding: 0.25rem 0.5rem;
     border-radius: 0.2rem;
 }
-
-h1 {
-    padding-bottom: 0.3em;
-    font-size: 2em;
-    border-bottom: 1px solid var(--border-color-muted);
-    margin-top: 3rem;
+.highlighted-word {
+    padding: 0.1rem;
+    background: #dadcdc;
+    border-radius: 0.25rem;
 }
+
+/* links */
 
 a {
     color: blue;
@@ -64,7 +92,3 @@ a {
     text-underline-offset: 0.2rem;
 }
 
-
-.highlighted-word {
-    border: 5px solid red;
-}
