@@ -29,12 +29,19 @@ nav {
     list-style: none;
     padding:0;
 }
+nav ul {
+    list-style: none;
+    padding:0;
+}
 nav li {
-    border: 1px solid blue;
-    background-color: crimson;
+    padding: 0.25rem 0.5rem;
 }
 nav li:hover {
-    background-color: lightblue;
+    background-color: #dcdcdc;
+}
+nav li a {
+    text-decoration: none;
+    color: black;
 }
 
 /* headers */

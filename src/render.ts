@@ -54,11 +54,13 @@ function slugForHeader(title:string) {
 }
 function renderTOCLink(entry:TOCEntry) {
     const slug = slugForHeader(entry[1])
-    return `<a href='#${slug}' class='toc-${entry[0]}'>${entry[1]}</a>`
+    return `<li><a href='#${slug}' class='toc-${entry[0]}'>${entry[1]}</a></li>`
 }
 function renderTOC(toc: TOCEntry[]) {
     return `<nav class="toc">
+    <ul>
     ${toc.map(entry => renderTOCLink(entry)).join("\n")}
+    </ul>
     </nav>`
 }
 
