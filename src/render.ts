@@ -49,8 +49,17 @@ function renderFooter() {
 <!--<script>hljs.highlightAll();</script>-->
 </body></html>`
 }
+function slugForHeader(title:string) {
+    return title.replaceAll(' ','_').toLowerCase()
+}
+function renderTOCLink(entry:TOCEntry) {
+    const slug = slugForHeader(entry[1])
+    return `<a href='#${slug}' class='toc-${entry[0]}'>${entry[1]}</a>`
+}
 function renderTOC(toc: TOCEntry[]) {
-    return `<nav class="toc">${toc.map(entry => `<li>${entry[1]}</li>`).join("\n")}</nav>`
+    return `<nav class="toc">
+    ${toc.map(entry => renderTOCLink(entry)).join("\n")}
+    </nav>`
 }
 
 type CodeDecoration = {
@@ -91,6 +100,11 @@ async function find_toc(root: XmlElement) {
     await toc_finder.visit(root)
     return TOC
 }
+
+function renderHeaderStart(e: XmlElement) {
+    return `<${e.name} id=${slugForHeader(e.text)}>`
+}
+
 async function renderToHtml(root: XmlElement, TOC: TOCEntry[]) {
     let output = ""
     let inside_codeblock = false
@@ -136,6 +150,10 @@ async function renderToHtml(root: XmlElement, TOC: TOCEntry[]) {
 <iframe id="ytplayer" type="text/html" width="720" height="405"
 src="https://www.youtube.com/embed/${e.attributes.embed}"
  allowfullscreen>`
+            }
+            if(e.name === 'h1' || e.name === 'h2' || e.name === 'h3') {
+                output += renderHeaderStart(e)
+                return
             }
             output += `<${e.name}>`
         },
