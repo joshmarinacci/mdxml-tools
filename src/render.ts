@@ -107,6 +107,19 @@ function renderHeaderStart(e: XmlElement) {
     return `<${e.name} id=${slugForHeader(e.text)}>`
 }
 
+function renderNav(url_map: Map<any, any>) {
+    const nav_links:string[] = []
+
+    for(let [name,url] of url_map) {
+        nav_links.push(`<li><a href="${url}">${name}</a></li>`)
+    }
+        return `<nav class="docset">
+    <ul>
+    ${nav_links.join("\n")}
+    </ul>
+    </nav>`
+}
+
 async function renderToHtml(root: XmlElement, TOC: TOCEntry[], url_map: Map<any, any>) {
     let output = ""
     let inside_codeblock = false
@@ -135,6 +148,7 @@ async function renderToHtml(root: XmlElement, TOC: TOCEntry[], url_map: Map<any,
             }
             if(e.name === 'document') {
                 output += renderHeader()
+                output += renderNav(url_map)
                 output += renderTOC(TOC)
                 output += '<article>'
                 return

@@ -19,8 +19,13 @@ article {
 nav {
     position: absolute;
     max-width: 10rem;
-    left: 0;
     top:0;
+}
+nav.docset {
+    left: 0;
+}
+nav.toc {
+    right: 0;
 }
 
 

@@ -64,29 +64,31 @@ async function loadXml(infile: string) {
 async function renderDocset(opts: CLIOpts) {
     const xml = await loadXml(opts.values.infile)
     const docset = xmlToDocset(xml)
-    console.log('docset', docset)
+    // console.log('docset', docset)
     // copy style
     await copyStyles(opts)
+    const url_map = new Map<string,string>
+    // track each page
+    for(let page of docset.pages) {
+        url_map.set(page.src,path.basename(page.src,path.extname(page.src))+'.html')
+    }
+
     // render each page
     for (let page of docset.pages) {
         let page_path = path.join(path.dirname(opts.values.infile), page.src)
-        console.log("page path", page_path)
         const str = (await fs.readFile(page_path)).toString("utf8");
-        const url_map = new Map<string,string>
-        url_map.set('page1.xml','page1.html')
-        url_map.set('page2.xml','page2.html')
+        log.info("parsing",page_path)
         const output = await doRender(str, url_map)
         const page_out_path = path.join(opts.values.outdir, path.basename(page.src, path.extname(page.src)) + '.html')
-        console.log('writing out to', page_out_path)
+        log.info('writing',page_out_path)
         await fs.writeFile(page_out_path, output)
     }
     for(let res of docset.resources) {
         let res_path = path.join(path.dirname(opts.values.infile), res.src)
         let res_out_path = path.join(opts.values.outdir,res.src)
         await mkdir(path.dirname(res_out_path))
-        await fs.cp(res_path, res_out_path, {
-            recursive:true
-        })
+        log.info('copying ',res_path,'to',res_out_path)
+        await fs.cp(res_path, res_out_path)
     }
     // render index page
     const index_output = await renderIndexPage(docset)
