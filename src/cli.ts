@@ -5,7 +5,7 @@ import {parseArgs} from "node:util";
 import {make_logger} from "josh_js_util"
 import {mkdir} from "josh_node_util"
 import {doRender} from "./render.js";
-
+import {spawn} from "node:child_process";
 
 type CLIOpts = {
     values: {
@@ -13,6 +13,7 @@ type CLIOpts = {
         infile:string
         outdir:string
         serve:boolean
+        browser:boolean
     }
 }
 
@@ -23,7 +24,7 @@ const opts = (parseArgs({
     strict:true,
     options: {
         serve: {
-            type: 'string',
+            type: 'boolean',
         },
         outdir: {
             type: 'string'
@@ -33,6 +34,10 @@ const opts = (parseArgs({
         },
         resources:{
             type:'string'
+        },
+        browser: {
+            type:'boolean',
+            default: false
         }
     }
 }) as unknown as CLIOpts)
@@ -72,4 +77,8 @@ if(opts.values.serve) {
     const url = `http://localhost:${port}/${outfile_name}`
     log.info("open",url)
     app.listen(port)
+    if(opts.values.browser) {
+        log.info("opening the browser to",url)
+        spawn('open',[url])
+    }
 }
