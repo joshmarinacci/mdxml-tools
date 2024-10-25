@@ -2,6 +2,7 @@ import {parseXml, XmlElement, XmlText} from "@rgrove/parse-xml";
 // import path from "path";
 // import {promises as fs} from "fs";
 import {codeToHtml} from "shiki";
+import {Docset} from "./docset.js";
 type VisitorCallback = (e:XmlElement) => Promise<void>
 type VisitorTextCallback = (e:XmlText) => Promise<void>
 type VisitorOptions = {
@@ -107,12 +108,10 @@ function renderHeaderStart(e: XmlElement) {
     return `<${e.name} id=${slugForHeader(e.text)}>`
 }
 
-function renderNav(url_map: Map<any, any>) {
-    const nav_links:string[] = []
-
-    for(let [name,url] of url_map) {
-        nav_links.push(`<li><a href="${url}">${name}</a></li>`)
-    }
+function renderNav(url_map: Map<any, any>, docset: Docset) {
+    let nav_links = docset.pages.map(page => {
+        return `<li><a href="${url_map.get(page.src)}">${page.title}</a></li>`
+    })
         return `<nav class="docset">
     <ul>
     ${nav_links.join("\n")}
@@ -120,7 +119,7 @@ function renderNav(url_map: Map<any, any>) {
     </nav>`
 }
 
-async function renderToHtml(root: XmlElement, TOC: TOCEntry[], url_map: Map<any, any>) {
+async function renderToHtml(root: XmlElement, TOC: TOCEntry[], url_map: Map<any, any>, docset: Docset) {
     let output = ""
     let inside_codeblock = false
     const render = new Visitor({
@@ -148,7 +147,7 @@ async function renderToHtml(root: XmlElement, TOC: TOCEntry[], url_map: Map<any,
             }
             if(e.name === 'document') {
                 output += renderHeader()
-                output += renderNav(url_map)
+                output += renderNav(url_map,docset)
                 output += renderTOC(TOC)
                 output += '<article>'
                 return
@@ -215,13 +214,13 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
     await render.visit(root)
     return output
 }
-export async function doRender(str: string, url_map: Map<any, any>) {
+export async function doRender(str: string, url_map: Map<any, any>, docset: Docset) {
     const out = parseXml(str,{
         includeOffsets:true
     })
     const root = out.children[0] as XmlElement
     const TOC = await find_toc(root)
-    return renderToHtml(root,TOC, url_map)
+    return renderToHtml(root,TOC, url_map, docset)
 
 
     // async function streamInclude(src: string) {
