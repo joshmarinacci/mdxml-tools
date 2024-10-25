@@ -107,7 +107,7 @@ function renderHeaderStart(e: XmlElement) {
     return `<${e.name} id=${slugForHeader(e.text)}>`
 }
 
-async function renderToHtml(root: XmlElement, TOC: TOCEntry[]) {
+async function renderToHtml(root: XmlElement, TOC: TOCEntry[], url_map: Map<any, any>) {
     let output = ""
     let inside_codeblock = false
     const render = new Visitor({
@@ -143,7 +143,12 @@ async function renderToHtml(root: XmlElement, TOC: TOCEntry[]) {
                 output += `<figure><img src="${e.attributes.src}" title="${e.attributes.title}"/><figcaption>${e.attributes.title}</figcaption></figure>`
             }
             if(e.name === 'link') {
-                output += `<a href="${e.attributes.target}">`
+                let target = e.attributes.target
+                if(!target) console.warn("link missing target",e.name, e.attributes)
+                if(url_map.has(target)) {
+                    target = url_map.get(target)
+                }
+                output += `<a href="${target}">`
             }
             if(e.name === 'include') return
             if(e.name === 'fragment') return
@@ -196,11 +201,13 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
     await render.visit(root)
     return output
 }
-export async function doRender(str:string) {
+export async function doRender(str: string, url_map: Map<any, any>) {
     const out = parseXml(str,{
         includeOffsets:true
     })
     const root = out.children[0] as XmlElement
+    const TOC = await find_toc(root)
+    return renderToHtml(root,TOC, url_map)
 
 
     // async function streamInclude(src: string) {
@@ -236,7 +243,4 @@ export async function doRender(str:string) {
     //     }
     // }).visit(out.children[0] as XmlElement)
 
-    const TOC = await find_toc(root)
-
-    return renderToHtml(root,TOC)
 }

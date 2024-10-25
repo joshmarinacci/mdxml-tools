@@ -4,5 +4,5 @@
         minimal.
     </para>
     <para>You can get to the second page using either the nav on the side of the
-        page or by following <link href="page2.xml">this link</link>.</para>
+        page or by following <link target="page2.xml">this link</link>.</para>
 </document>

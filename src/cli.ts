@@ -72,7 +72,10 @@ async function renderDocset(opts: CLIOpts) {
         let page_path = path.join(path.dirname(opts.values.infile), page.src)
         console.log("page path", page_path)
         const str = (await fs.readFile(page_path)).toString("utf8");
-        const output = await doRender(str)
+        const url_map = new Map<string,string>
+        url_map.set('page1.xml','page1.html')
+        url_map.set('page2.xml','page2.html')
+        const output = await doRender(str, url_map)
         const page_out_path = path.join(opts.values.outdir, path.basename(page.src, path.extname(page.src)) + '.html')
         console.log('writing out to', page_out_path)
         await fs.writeFile(page_out_path, output)
@@ -129,7 +132,7 @@ if (opts.values.docset) {
     log.info("parsing", opts.values.infile)
     const raw_data = await fs.readFile(opts.values.infile as string)
     const str = raw_data.toString('utf-8')
-    const output = await doRender(str)
+    const output = await doRender(str, new Map())
     const outfile_name = path.basename(opts.values.infile, path.extname(opts.values.infile)) + '.html'
     const outfile = path.join(opts.values.outdir,
         path.basename(opts.values.infile, path.extname(opts.values.infile)) + '.html')
