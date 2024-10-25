@@ -91,7 +91,7 @@ async function renderDocset(opts: CLIOpts) {
         await fs.cp(res_path, res_out_path)
     }
     // render index page
-    const index_output = await renderIndexPage(docset)
+    const index_output = await renderIndexPage(docset,xml,url_map)
     const index_out_path = path.join(opts.values.outdir, "index.html")
     await fs.writeFile(index_out_path, index_output)
 }

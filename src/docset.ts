@@ -1,5 +1,6 @@
 import {XmlDocument, XmlElement} from "@rgrove/parse-xml";
 import path from "node:path";
+import {X} from "vitest/dist/reporters-yx5ZTtEV.js";
 
 export type Page = {
     src:string
@@ -44,8 +45,52 @@ export function xmlToDocset(xml: XmlDocument) {
     return docset
 }
 
-export async function renderIndexPage(docset: Docset) {
-    const pages = docset.pages.map(page => {
+
+type TransformCallback = (e:XmlElement, doNext:() => string) => string
+function transform(e:XmlElement, rules:Record<string,TransformCallback>) {
+    if(rules[e.name]) {
+        const cb = () => {
+            let out = ""
+            for(let ch of e.children) {
+                if(ch.type === 'element') {
+                    const el:XmlElement = ch as XmlElement
+                    out += transform(el,rules)
+                }
+            }
+            return out
+        }
+        return rules[e.name](e, cb)
+    } else {
+        console.warn("no rule for", e.name)
+        return ""
+    }
+}
+
+const index_template = (docset:Docset,content:string) => {
+    return `<html>
+<head>
+    <title>${docset.title}</title>
+    <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+<nav class='docset'>
+<ul>
+${content}
+</ul>
+</nav>
+</body>
+</html>`
+}
+
+export async function renderIndexPage(docset: Docset, root: XmlDocument, url_map: Map<any, any>) {
+    const output = transform(root.root as XmlElement, {
+        'docset':(e,children) => index_template(docset,children()),
+        'page':(e) => `<li><a href="${url_map.get(e.attributes.src)}">${e.attributes.title}</a></li>\n`,
+        "resource":(e,c) => ""
+    })
+    console.log("the output is",output)
+    return output
+/*    const pages = docset.pages.map(page => {
             return `<li><a href="${path.basename(page.src, '.xml') + ".html"}">${page.title}</a></li>`
         }
     ).join('\n')
@@ -59,5 +104,5 @@ Pages:
 <ul>
 ${pages}
 </ul>
-</body></html>`
+</body></html>`*/
 }
