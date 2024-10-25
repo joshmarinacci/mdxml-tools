@@ -49,7 +49,12 @@ export async function renderIndexPage(docset: Docset) {
             return `<li><a href="${path.basename(page.src, '.xml') + ".html"}">${page.title}</a></li>`
         }
     ).join('\n')
-    return `<html><body>
+    return `<html>
+<head>
+    <title>${docset.title}</title>
+    <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
 Pages:
 <ul>
 ${pages}

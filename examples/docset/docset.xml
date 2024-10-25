@@ -1,5 +1,5 @@
 <docset title="my cool docs">
     <page src="page1.xml" title="Page 1"/>
     <page src="page2.xml" title="Second Page"/>
-    <resource src="resources/redimage.png"/>
+    <resource src="images/redsquare.png"/>
 </docset>

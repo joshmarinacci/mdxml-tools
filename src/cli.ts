@@ -65,6 +65,8 @@ async function renderDocset(opts: CLIOpts) {
     const xml = await loadXml(opts.values.infile)
     const docset = xmlToDocset(xml)
     console.log('docset', docset)
+    // copy style
+    await copyStyles(opts)
     // render each page
     for (let page of docset.pages) {
         let page_path = path.join(path.dirname(opts.values.infile), page.src)
@@ -75,9 +77,16 @@ async function renderDocset(opts: CLIOpts) {
         console.log('writing out to', page_out_path)
         await fs.writeFile(page_out_path, output)
     }
+    for(let res of docset.resources) {
+        let res_path = path.join(path.dirname(opts.values.infile), res.src)
+        let res_out_path = path.join(opts.values.outdir,res.src)
+        await mkdir(path.dirname(res_out_path))
+        await fs.cp(res_path, res_out_path, {
+            recursive:true
+        })
+    }
     // render index page
     const index_output = await renderIndexPage(docset)
-    console.log("index page", index_output)
     const index_out_path = path.join(opts.values.outdir, "index.html")
     await fs.writeFile(index_out_path, index_output)
 }
@@ -96,6 +105,13 @@ async function serveDocs(outfile_name: string) {
     }
 }
 
+async function copyStyles(opts: CLIOpts) {
+    const style_inpath = path.join(opts.values.resources, 'style.css')
+    const style_outpath = path.join(opts.values.outdir, 'style.css')
+    log.info("copying", style_inpath, 'to', style_outpath)
+    await fs.cp(style_inpath, style_outpath)
+}
+
 // add resources
 if (opts.values.docset) {
     let index_path = await renderDocset(opts)
@@ -103,10 +119,7 @@ if (opts.values.docset) {
         await serveDocs("index.html")
     }
 } else {
-    const style_inpath = path.join(opts.values.resources, 'style.css')
-    const style_outpath = path.join(opts.values.outdir, 'style.css')
-    log.info("copying", style_inpath, 'to', style_outpath)
-    await fs.cp(style_inpath, style_outpath)
+    await copyStyles(opts)
 
     const image_inpath = path.join(opts.values.resources, 'redsquare.png')
     const image_outpath = path.join(opts.values.outdir, 'redsquare.png')
