@@ -1,0 +1,11 @@
+<document>
+    <h1>Second page</h1>
+    <para>This is an additional page of content. It also has an image.</para>
+
+    <image title="embedded image" src="images/redsquare.png"/>
+
+    <h2>sub header</h2>
+    <p>If you really liked the first page you can
+    <link target="page1.xml">go back to it</link></p>
+
+</document>

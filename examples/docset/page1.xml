@@ -1,0 +1,8 @@
+<document>
+    <h1>Header for the first page</h1>
+    <para>This is the first page of content for the docset. It's <em>pretty cool</em>, but rather
+        minimal.
+    </para>
+    <para>You can get to the second page using either the nav on the side of the
+        page or by following <link href="page2.xml">this link</link>.</para>
+</document>
