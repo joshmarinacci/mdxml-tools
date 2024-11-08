@@ -27,7 +27,7 @@ async function go() {
 
     await build({
         // ...sharedConfig,
-        entryPoints: ["src/cli.ts","src/render.ts","src/docset.ts"],
+        entryPoints: ["src/cli.ts","src/render.ts","src/docset.ts","src/util.ts",'src/markdown.ts'],
         platform: "node",
         format: "esm",
         outdir:"build",

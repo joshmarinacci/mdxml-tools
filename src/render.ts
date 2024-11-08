@@ -3,6 +3,7 @@ import {parseXml, XmlElement, XmlText} from "@rgrove/parse-xml";
 // import {promises as fs} from "fs";
 import {codeToHtml} from "shiki";
 import {Docset} from "./docset.js";
+import {parse_markdown_blocks} from "./markdown.js";
 type VisitorCallback = (e:XmlElement) => Promise<void>
 type VisitorTextCallback = (e:XmlText) => Promise<void>
 type VisitorOptions = {
@@ -214,7 +215,7 @@ src="https://www.youtube.com/embed/${e.attributes.embed}"
     await render.visit(root)
     return output
 }
-export async function doRender(str: string, url_map: Map<any, any>, docset: Docset) {
+export async function renderXMLPage(str: string, url_map: Map<any, any>, docset: Docset) {
     const out = parseXml(str,{
         includeOffsets:true
     })
@@ -256,4 +257,72 @@ export async function doRender(str: string, url_map: Map<any, any>, docset: Docs
     //     }
     // }).visit(out.children[0] as XmlElement)
 
+}
+
+async function formatCodeBlock(text: string, lang: string) {
+    let html = await codeToHtml(text, {
+        lang: lang,
+        theme: 'vitesse-light',
+        // decorations: decs.map(dec => ({
+        //     start:dec.start,
+        //     end:dec.end,
+        //     properties: { class: 'highlighted-word' }
+        // }))
+    })
+    return `${lang} <div class='codeblock-wrapper'><button class="codeblock-button">Copy Code</button>${html}</div>`
+}
+
+export async function renderMarkdownPage(str: string, url_map: Map<any, any>, docset: Docset) {
+    // read in the markdown to a data structure
+    const blocks = parse_markdown_blocks(str)
+    console.log("blocks are",blocks.length)
+    let output = ""
+    output += renderHeader()
+    output += renderNav(url_map,docset)
+    // output += renderTOC(TOC)
+    output += '<article>'
+
+    for(let block of blocks) {
+        if(block.type === 'blank') continue
+        // console.log("block",block)
+        if(block.type === 'para') {
+            output += `<p>${block.content}</p>\n`
+            continue
+        }
+        if(block.type === 'header') {
+            output += `<h${block.level}>${block.content}</h${block.level}>\n`
+            continue
+        }
+        if(block.type === 'li') {
+            output += `<li>${block.content}</li>\n`
+            continue
+        }
+        const SUPPORTED_LANGUAGES = ['javascript']
+        if(block.type === 'codeblock') {
+            const text = block.content
+            const lang = block.language?.trim()
+            if(!lang) {
+                console.warn("block is missing language")
+                continue
+            }
+            if(!SUPPORTED_LANGUAGES.includes(lang)) {
+                console.warn("unsupported language",lang)
+                continue
+            }
+            output += await formatCodeBlock(text, lang)
+            continue
+        }
+        // console.log('block is',block)
+        if(block.type === 'extension') {
+            console.log("skipping extension for now")
+            continue
+        }
+        console.warn("unsupported block type",block.type)
+    }
+
+    output += '</article>'
+    output += renderFooter()
+
+    // console.log("final markdown output is",output)
+    return output
 }

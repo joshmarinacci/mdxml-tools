@@ -4,10 +4,10 @@ import {promises as fs} from "fs"
 import {parseArgs} from "node:util";
 import {make_logger} from "josh_js_util"
 import {mkdir} from "josh_node_util"
-import {doRender} from "./render.js";
+import {renderMarkdownPage, renderXMLPage} from "./render.js";
 import {spawn} from "node:child_process";
-import {parseXml} from "@rgrove/parse-xml";
-import {renderIndexPage, xmlToDocset} from "./docset.js";
+import {Docset, renderIndexPage, xmlToDocset} from "./docset.js";
+import {loadXml} from "./util.js";
 
 type CLIOpts = {
     values: {
@@ -53,13 +53,6 @@ console.log("parsed the args", opts)
 // make dir
 await mkdir(opts.values.outdir)
 
-async function loadXml(infile: string) {
-    log.info("parsing", infile)
-    const raw_data = await fs.readFile(infile as string)
-    const str = raw_data.toString('utf-8')
-    const xml = parseXml(str, {includeOffsets: true})
-    return xml
-}
 
 async function renderDocset(opts: CLIOpts) {
     const xml = await loadXml(opts.values.infile)
@@ -76,12 +69,26 @@ async function renderDocset(opts: CLIOpts) {
     // render each page
     for (let page of docset.pages) {
         let page_path = path.join(path.dirname(opts.values.infile), page.src)
+        let ext = path.extname(page.src).toLowerCase().trim()
         const str = (await fs.readFile(page_path)).toString("utf8");
-        log.info("parsing",page_path)
-        const output = await doRender(str, url_map,docset)
-        const page_out_path = path.join(opts.values.outdir, path.basename(page.src, path.extname(page.src)) + '.html')
-        log.info('writing',page_out_path)
-        await fs.writeFile(page_out_path, output)
+        console.log("extension is",ext)
+        if(ext === '.md') {
+            log.info("parsing Markdown", page_path)
+            const output = await renderMarkdownPage(str,url_map,docset)
+            const page_out_path = path.join(opts.values.outdir, path.basename(page.src, path.extname(page.src)) + '.html')
+            log.info('writing', page_out_path)
+            await fs.writeFile(page_out_path, output)
+            continue
+        }
+        if(ext === '.xml') {
+            log.info("parsing MDXML", page_path)
+            const output = await renderXMLPage(str, url_map, docset)
+            const page_out_path = path.join(opts.values.outdir, path.basename(page.src, path.extname(page.src)) + '.html')
+            log.info('writing', page_out_path)
+            await fs.writeFile(page_out_path, output)
+            continue
+        }
+        throw new Error(`unsupported file type ${page_path}`)
     }
     for(let res of docset.resources) {
         let res_path = path.join(path.dirname(opts.values.infile), res.src)
@@ -100,7 +107,7 @@ async function serveDocs(outfile_name: string) {
     const app = express()
     app.use(express.static(opts.values.outdir))
     log.info(`serving ${opts.values.outdir}`)
-    const port = 3000
+    const port = 3003
     const url = `http://localhost:${port}/${outfile_name}`
     log.info("open", url)
     app.listen(port)
@@ -119,7 +126,7 @@ async function copyStyles(opts: CLIOpts) {
 
 // add resources
 if (opts.values.docset) {
-    let index_path = await renderDocset(opts)
+    await renderDocset(opts)
     if (opts.values.serve) {
         await serveDocs("index.html")
     }
@@ -134,7 +141,7 @@ if (opts.values.docset) {
     log.info("parsing", opts.values.infile)
     const raw_data = await fs.readFile(opts.values.infile as string)
     const str = raw_data.toString('utf-8')
-    const output = await doRender(str, new Map(), undefined)
+    const output = await renderXMLPage(str, new Map(), undefined)
     const outfile_name = path.basename(opts.values.infile, path.extname(opts.values.infile)) + '.html'
     const outfile = path.join(opts.values.outdir,
         path.basename(opts.values.infile, path.extname(opts.values.infile)) + '.html')

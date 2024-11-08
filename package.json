@@ -11,6 +11,7 @@
     "clean": "rm -rf build && rm -rf temp",
     "render": "npm run build && node build/cli.js --serve --outdir=temp --resources=resources --infile=examples/features/features.xml --browser",
     "render-docset": "npm run build && node build/cli.js --outdir=temp --resources=resources --infile=examples/docset/docset.xml --docset --serve --browser",
+    "render-canvas": "npm run build && node build/cli.js --outdir=temp --resources=resources --infile=examples/canvas-book/docset.xml --docset --serve",
     "test-recurse": "npm run build && node build/cli.js --outdir=temp --resources=resources --infile=examples/docset/docset.xml --docset",
     "automated": "npm run build && node build/cli.js --serve --outdir=temp --resources=resources",
     "build": "npm run clean && node build.js",
@@ -27,7 +28,8 @@
     "express": "^4.21.1",
     "fast-xml-parser": "^4.5.0",
     "josh_js_util": "^0.1.25",
-    "josh_node_util": "^0.0.4"
+    "josh_node_util": "^0.0.4",
+    "ohm-js": "^17.1.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",

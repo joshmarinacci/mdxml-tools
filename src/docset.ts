@@ -88,7 +88,7 @@ export async function renderIndexPage(docset: Docset, root: XmlDocument, url_map
         'page':(e) => `<li><a href="${url_map.get(e.attributes.src)}">${e.attributes.title}</a></li>\n`,
         "resource":(e,c) => ""
     })
-    console.log("the output is",output)
+    // console.log("the output is",output)
     return output
 /*    const pages = docset.pages.map(page => {
             return `<li><a href="${path.basename(page.src, '.xml') + ".html"}">${page.title}</a></li>`
