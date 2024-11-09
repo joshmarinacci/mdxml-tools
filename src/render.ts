@@ -317,6 +317,24 @@ function render_block_image(img: BlockImage) {
             </figure>`
 }
 
+type MarkdownExtensionGallery = {
+    type:"gallery",
+    title:string,
+    images:string[]
+}
+function render_markdown_gallery(json: MarkdownExtensionGallery) {
+    console.log("making gallery",json)
+    return `<div class='gallery'>
+    <h5>${json.title}</h5>
+    <ul>
+        ${json.images.map(image => `<li><img src="${image}"/></li>`).join("\n")}
+    </ul>
+    <a href='#'>prev</a>
+    dots
+    <a href='#'>next</a>
+    </div>`
+}
+
 export async function renderMarkdownPage(str: string, url_map: Map<any, any>, docset: Docset) {
     // read in the markdown to a data structure
     const blocks = parse_markdown_blocks(str)
@@ -360,6 +378,18 @@ export async function renderMarkdownPage(str: string, url_map: Map<any, any>, do
         // console.log('block is',block)
         if(block.type === 'extension') {
             // console.log("skipping extension for now")
+            const parsable = `{${block.content}}`
+            // console.log('parsing',parsable)
+            try {
+                const json = JSON.parse(parsable)
+                if(json.type === 'gallery') {
+                    output += render_markdown_gallery(json)
+                    continue
+                }
+                console.log("unknown extension json is", json)
+            } catch (error) {
+                console.error("could not parse extension")
+            }
             continue
         }
         if(block.type === 'image') {

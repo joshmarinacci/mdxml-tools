@@ -13,15 +13,15 @@ These screenshots give you just a taste of what is possible with Canvas.
 
 
 {{
-type: "gallery",
-title: "Apps made with HTML Canvas",
-images: [
+"type": "gallery",
+"title": "Apps made with HTML Canvas",
+"images": [
 "images/screenshot1.png",
 "images/screenshot2.png",
 "images/screenshot3.png",
 "images/screenshot4.png",
 "images/screenshot5.png",
-"images/screenshot6.png",
+"images/screenshot6.png"
 ]
 }}
 
@@ -132,15 +132,15 @@ ctx.fillRect(var1,var2,var3,var4);
 ```
 
 {{
-type: "jangle",
-id: "drawrect",
-width: "300",
-height: "100",
-defaultValues: {
-var1: "25",
-var2: "25",
-var3: "100",
-var4: "50"
+"type": "jangle",
+"id": "drawrect",
+"width": "300",
+"height": "100",
+"defaultValues": {
+"var1": "25",
+"var2": "25",
+"var3": "100",
+"var4": "50"
 }
 }}
 

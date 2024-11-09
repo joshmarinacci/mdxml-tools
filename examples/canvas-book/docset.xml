@@ -3,4 +3,6 @@
     <page src="pagex.xml" title="Page 1"/>
     <resource src="images/redrect.png"/>
     <resource src="images/coords.png"/>
+    <resource src="images/screenshot1.png"/>
+    <resource src="images/screenshot2.png"/>
 </docset>
