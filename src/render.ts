@@ -281,33 +281,37 @@ async function formatCodeBlock(text: string, lang: string) {
     return `${lang} <div class='codeblock-wrapper'><button class="codeblock-button">Copy Code</button>${html}</div>`
 }
 
+function makeElem(name:string) {
+    return (text:string) => `<${name}>${text}</${name}>`
+}
+const code = makeElem('code')
+const bold = makeElem('b')
+const italic = makeElem('i')
+
+function markdown_inline_to_html(span: [string, string]) {
+    const type = span[0]
+    if(type === 'bold') return bold(span[1])
+    if(type === 'plain') return span[1]
+    if(type === 'code') return code(span[1])
+    if(type === 'italic') return italic(span[1])
+    if(type === 'link') return `<a href="${span[2]}">${span[1]}</a>`
+    console.warn("unsupported span type",span)
+    return span
+}
+
 function markdown_block_to_html(spans: [string,string][]) {
     let output = ""
     for(let span of spans) {
-        // console.log("span",span)
-        if(span[0] === 'plain') {
-            output += span[1]
-            continue
-        }
-        if(span[0] === 'link') {
-            output += `<a href="${span[2]}">${span[1]}</a>`
-            continue
-        }
-        if(span[0] === 'bold') {
-            output += `<b>${span[1]}</b>`
-            continue
-        }
-        if(span[0] === 'code') {
-            output += `<code>${span[1]}</code>`
-            continue
-        }
-        if(span[0] === 'italic') {
-            output += `<i>${span[1]}</i>`
-            continue
-        }
-        console.warn("unsupported span type",span)
+        output += markdown_inline_to_html(span)
     }
     return output
+}
+
+function render_block_image(img: BlockImage) {
+    return `<figure>
+            <img src="${img.url}"/>
+            <figcaption>${img.content}</figcaption>
+            </figure>`
 }
 
 export async function renderMarkdownPage(str: string, url_map: Map<any, any>, docset: Docset) {
@@ -356,11 +360,7 @@ export async function renderMarkdownPage(str: string, url_map: Map<any, any>, do
             continue
         }
         if(block.type === 'image') {
-            const img = block as BlockImage
-            output += `<figure>
-            <img src="${img.url}"/>
-            <figcaption>${img.content}</figcaption>
-            </figure>`
+            output += render_block_image(block as BlockImage)
             continue
         }
         console.warn("unsupported block type",block.type,block)
