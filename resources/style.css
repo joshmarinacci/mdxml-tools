@@ -1,6 +1,8 @@
 /*    defaults       */
 html, body {
-    background-color: #ffffff;
+    --bg-color:#ffffff;
+    background-color: var(--bg-color);
+    --nav-bg-color: #eee;
     font-family: sans-serif;
     line-height: 150%;
     color: #1f2328;
@@ -33,6 +35,7 @@ nav.toc {
 nav {
     list-style: none;
     padding:0;
+    background-color: var(--nav-bg-color);
 }
 nav ul {
     list-style: none;

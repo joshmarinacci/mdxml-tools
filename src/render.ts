@@ -3,7 +3,7 @@ import {parseXml, XmlElement, XmlText} from "@rgrove/parse-xml";
 // import {promises as fs} from "fs";
 import {codeToHtml} from "shiki";
 import {Docset} from "./docset.js";
-import {parse_markdown_blocks} from "./markdown.js";
+import {Block, parse_markdown_blocks} from "./markdown.js";
 type VisitorCallback = (e:XmlElement) => Promise<void>
 type VisitorTextCallback = (e:XmlText) => Promise<void>
 type VisitorOptions = {
@@ -90,7 +90,7 @@ function childrenToText(e: XmlElement):[string,CodeDecoration[]] {
     return [totalText, decs]
 }
 type TOCEntry = [string,string]
-async function find_toc(root: XmlElement) {
+async function find_xml_toc(root: XmlElement) {
     const TOC:TOCEntry[] = []
     const toc_finder = new Visitor({
         enter:async (e) => {
@@ -102,6 +102,15 @@ async function find_toc(root: XmlElement) {
         exit: async (e) => {}
     })
     await toc_finder.visit(root)
+    return TOC
+}
+async function find_markdown_toc(blocks:Block[]):Promise<TOCEntry[]> {
+    const TOC:TOCEntry[] = []
+    for(let block of blocks) {
+        if(block.type === 'header') {
+            TOC.push(['h1',block.content])
+        }
+    }
     return TOC
 }
 
@@ -220,7 +229,7 @@ export async function renderXMLPage(str: string, url_map: Map<any, any>, docset:
         includeOffsets:true
     })
     const root = out.children[0] as XmlElement
-    const TOC = await find_toc(root)
+    const TOC = await find_xml_toc(root)
     return renderToHtml(root,TOC, url_map, docset)
 
 
@@ -275,11 +284,12 @@ async function formatCodeBlock(text: string, lang: string) {
 export async function renderMarkdownPage(str: string, url_map: Map<any, any>, docset: Docset) {
     // read in the markdown to a data structure
     const blocks = parse_markdown_blocks(str)
-    console.log("blocks are",blocks.length)
+    const TOC = await find_markdown_toc(blocks)
+
     let output = ""
     output += renderHeader()
     output += renderNav(url_map,docset)
-    // output += renderTOC(TOC)
+    output += renderTOC(TOC)
     output += '<article>'
 
     for(let block of blocks) {
