@@ -1,7 +1,8 @@
 import * as ohm from 'ohm-js'
+import {b} from "vitest/dist/suite-IbNSsUWN.js";
 
 export type Block = {
-    type:"header"|"para"|"blank"|"li"|"codeblock"|"extension"
+    type:"header"|"para"|"blank"|"li"|"codeblock"|"extension"|"image"
     content:string
 }
 export type Header = {
@@ -9,6 +10,11 @@ export type Header = {
     level:number,
 } & Block
 
+export type BlockImage = {
+    type:"image",
+    content:string,
+    url:string,
+} & Block
 export type Codeblock = {
     type:'codeblock',
     language:string,
@@ -20,13 +26,14 @@ export function parse_markdown_blocks(str:string) {
     const grammar = ohm.grammar(`
 MarkdownOuter {
   doc = block+
-  block =  blank | h4 | h3 | h2 | h1 | bullet | code | ext | para | endline
+  block =  blank | h4 | h3 | h2 | h1 | bullet | img | code | ext | para | endline
   h4 = "####" rest
   h3 = "###" rest
   h2 = "##" rest
   h1 = "#" rest
   para = line+ //paragraph is just multiple consecutive lines
   bullet = "* " rest (~"*" ~blank rest)*
+  img = "![" (~"]" any)+ "]" "(" (~")" any)+ ")" rest
   code = q rest (~q any)* q //anything between the \`\`\` markers
   q = "\`\`\`"   // start and end code blocks
   ext = obb rest (~cbb any)* cbb //anything between {{ and }}
@@ -49,6 +56,7 @@ MarkdownOuter {
         h2:(_,b) => ({ type:"header",level:2,content:b.blocks() } as Header),
         h3:(_,b) => ({ type:"header",level:3,content:b.blocks() } as Header),
         h4:(_,b) => ({ type:"header",level:4,content:b.blocks() } as Header),
+        img:(_,text,c,d,e,f,styles) => ({type:"image", content:text.sourceString, url:e.sourceString, styles:styles.sourceString} as BlockImage),
         code:(_,name,cod,_2) =>
             ({ type:"codeblock", language:name.blocks(), content:cod.blocks().join("")} as Codeblock),
         ext:(_a,_b,content,_d) => ({type: 'extension', content: content.sourceString} as Block),

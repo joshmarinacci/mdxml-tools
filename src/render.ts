@@ -3,7 +3,7 @@ import {parseXml, XmlElement, XmlText} from "@rgrove/parse-xml";
 // import {promises as fs} from "fs";
 import {codeToHtml} from "shiki";
 import {Docset} from "./docset.js";
-import {Block, parse_markdown_blocks} from "./markdown.js";
+import {Block, BlockImage, parse_markdown_blocks} from "./markdown.js";
 type VisitorCallback = (e:XmlElement) => Promise<void>
 type VisitorTextCallback = (e:XmlText) => Promise<void>
 type VisitorOptions = {
@@ -324,10 +324,18 @@ export async function renderMarkdownPage(str: string, url_map: Map<any, any>, do
         }
         // console.log('block is',block)
         if(block.type === 'extension') {
-            console.log("skipping extension for now")
+            // console.log("skipping extension for now")
             continue
         }
-        console.warn("unsupported block type",block.type)
+        if(block.type === 'image') {
+            const img = block as BlockImage
+            output += `<figure>
+            <img src="${img.url}"/>
+            <figcaption>${img.content}</figcaption>
+            </figure>`
+            continue
+        }
+        console.warn("unsupported block type",block.type,block)
     }
 
     output += '</article>'
