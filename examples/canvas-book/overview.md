@@ -52,7 +52,7 @@ code looks like:
 ![This rectangle is drawn with the context.fillRect() function](images/redrect.png).screenshot
 
 
-It's important to understand that Canvas is for _drawing pixels_. It doesn't have
+It's important to understand that Canvas is for __drawing pixels__. It doesn't have
 shapes or vectors. There are no objects to attach event handlers to. It just
 draws pixels to the screen.  As we shall see this is both a strength and a
 weakness.
@@ -62,9 +62,9 @@ weakness.
 There are four ways to draw things on the web: Canvas, SVG, CSS, and direct DOM
 manipulation. Canvas differ from the other three:
 
-* SVG: A vector API that draws shapes. Each shape has an object that you can  attach event handlers to. If you zoom in the shape stays smooth, whereas Canvas would become pixelated.
-* CSS: For styling DOM elements. Since there are no DOM objects for things you draw in Canvas you can't use CSS to style it. CSS will only affect the rectanglar area of the Canvas itself, so you can set a border and background color, but that's it.
-* DOM manipulation: The DOM, or Document Object Model, defines an object for everything on the screen. DOM animation, either by using CSS or JavaScript to move objects around, can be smoother in some cases than doing it with Canvas, but it depends on your browser implementation.
+* *SVG*: A vector API that draws shapes. Each shape has an object that you can  attach event handlers to. If you zoom in the shape stays smooth, whereas Canvas would become pixelated.
+* *CSS*: For styling DOM elements. Since there are no DOM objects for things you draw in Canvas you can't use CSS to style it. CSS will only affect the rectanglar area of the Canvas itself, so you can set a border and background color, but that's it.
+* *DOM animation*: The DOM, or Document Object Model, defines an object for everything on the screen. DOM animation, either by using CSS or JavaScript to move objects around, can be smoother in some cases than doing it with Canvas, but it depends on your browser implementation.
 
 
 ## Which? What? When?
@@ -110,7 +110,7 @@ On the mobile side all recent smartphone platforms support it because most of th
 based on WebKit, which has long had good support. I know for sure iOS, Android and Windows Phone 8
 support it.
 
-Now, not every mobile device has very complete or _fast_ support for Canvas, so
+Now, not every mobile device has very complete or __fast__ support for Canvas, so
 we'll look at how to optimize our code for mobile devices later in the
 performance section of this book.
 
@@ -181,7 +181,7 @@ notation like hex, names, or `rgb()` functions.
 ## Paths
 
 Canvas only directly supports the rectangle shape. To draw any other shape  you
-must draw it yourself using a _path_. Paths are shapes created by a bunch  of
+must draw it yourself using a __path__. Paths are shapes created by a bunch  of
 straight or curved line segments. In Canvas you must first define a path with
 `beginPath()`, then you can fill it, stroke it, or use it as a clip. You can
 define each line segment with functions like `moveTo()`, `lineTo()`, and
@@ -295,7 +295,7 @@ the image. Using a negative source x coordinate will do the same.
 
 Canvas can draw text as well. The font attribute is the same as its CSS
 equivalent, so you can set the style, size, and font family. Note that the
-`fillText(string,x,y)` function draws using the _baseline_ of the
+`fillText(string,x,y)` function draws using the __baseline__ of the
 text, not the top. If you put your text at 0,0 then it will be drawn off the top
 of the screen. Be sure to lower the y by an appropriate amount.
 

@@ -72,42 +72,42 @@ MarkdownOuter {
     // console.log("match is",match)
     return semantics(match).blocks()
 }
-// function parse_markdown_content(block) {
-//     // l("parsing markdown inside block",block)
-//     let parser = {}
-//     parser.grammar = ohm.grammar(`
-// MarkdownInner {
-//   block = para*
-//   para = link | bold | italic | code | plain
-//   plain = ( ~( "*" | "\`" | "[" | "__") any)+
-//   bold = "*" (~"*" any)* "*"
-//   italic = "__" (~"__" any)* "__"
-//   code = "\`" (~"\`" any)* "\`"
-//   link = "!"? "[" (~"]" any)* "]" "(" (~")" any)* ")"
-// }
-//     `)
-//     parser.semantics = parser.grammar.createSemantics()
-//     parser.semantics.addOperation('content',{
-//         _terminal() { return this.sourceString },
-//         plain(a) {return ['plain',a.content().join("")] },
-//         bold(_1,a,_2) { return ['bold',a.content().join("")] },
-//         italic(_1,a,_2) { return ['italic',a.content().join("")] },
-//         code:(_1,a,_2) => ['code',a.content().join("")],
-//         link:(img,_1,text,_2,_3,url,_4) => ['link',
-//             text.content().join(""),
-//             url.content().join(""),
-//             img.content().join("")]
-//     })
-//     let match = parser.grammar.match(block.content)
-//     if(match.failed()) {
-//         l("match failed on block",block)
-//         block.content = [['plain',block.content]]
-//     } else {
-//         block.content = parser.semantics(match).content()
-//     }
-//     return block
-// }
-// export async function parse_markdown(raw_markdown) {
+export function parse_markdown_content(text:string) {
+    // l("parsing markdown inside block",block)
+    let grammar = ohm.grammar(`
+MarkdownInner {
+  block = para*
+  para = link | bold | italic | code | plain
+  plain = ( ~( "*" | "\`" | "[" | "__") any)+
+  bold = "*" (~"*" any)* "*"
+  italic = "__" (~"__" any)* "__"
+  code = "\`" (~"\`" any)* "\`"
+  link = "!"? "[" (~"]" any)* "]" "(" (~")" any)* ")"
+}
+    `)
+    let semantics = grammar.createSemantics()
+    semantics.addOperation('content',{
+        _terminal() { return this.sourceString },
+        _iter:(...children) => children.map(c => c.content()),
+        plain(a) {return ['plain',a.content().join("")] },
+        bold(_1,a,_2) { return ['bold',a.content().join("")] },
+        italic(_1,a,_2) { return ['italic',a.content().join("")] },
+        code:(_1,a,_2) => ['code',a.content().join("")],
+        link:(img,_1,text,_2,_3,url,_4) => ['link',
+            text.content().join(""),
+            url.content().join(""),
+            img.content().join("")]
+    })
+    let match = grammar.match(text)
+    if(match.failed()) {
+        console.log("match failed on block",text)
+        // text.content = [['plain',text.content]]
+        return "match failed on block " + text
+    } else {
+        return semantics(match).content()
+    }
+}
+// export async function parse_markdown(raw_markdown:string) {
 //     // l('parsing raw markdown',raw_markdown)
 //     let blocks = parse_markdown_blocks(raw_markdown)
 //     // l("blocks are",blocks)

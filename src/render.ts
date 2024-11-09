@@ -3,7 +3,7 @@ import {parseXml, XmlElement, XmlText} from "@rgrove/parse-xml";
 // import {promises as fs} from "fs";
 import {codeToHtml} from "shiki";
 import {Docset} from "./docset.js";
-import {Block, BlockImage, parse_markdown_blocks} from "./markdown.js";
+import {Block, BlockImage, parse_markdown_blocks, parse_markdown_content} from "./markdown.js";
 type VisitorCallback = (e:XmlElement) => Promise<void>
 type VisitorTextCallback = (e:XmlText) => Promise<void>
 type VisitorOptions = {
@@ -281,6 +281,35 @@ async function formatCodeBlock(text: string, lang: string) {
     return `${lang} <div class='codeblock-wrapper'><button class="codeblock-button">Copy Code</button>${html}</div>`
 }
 
+function markdown_block_to_html(spans: [string,string][]) {
+    let output = ""
+    for(let span of spans) {
+        // console.log("span",span)
+        if(span[0] === 'plain') {
+            output += span[1]
+            continue
+        }
+        if(span[0] === 'link') {
+            output += `<a href="${span[2]}">${span[1]}</a>`
+            continue
+        }
+        if(span[0] === 'bold') {
+            output += `<b>${span[1]}</b>`
+            continue
+        }
+        if(span[0] === 'code') {
+            output += `<code>${span[1]}</code>`
+            continue
+        }
+        if(span[0] === 'italic') {
+            output += `<i>${span[1]}</i>`
+            continue
+        }
+        console.warn("unsupported span type",span)
+    }
+    return output
+}
+
 export async function renderMarkdownPage(str: string, url_map: Map<any, any>, docset: Docset) {
     // read in the markdown to a data structure
     const blocks = parse_markdown_blocks(str)
@@ -294,17 +323,16 @@ export async function renderMarkdownPage(str: string, url_map: Map<any, any>, do
 
     for(let block of blocks) {
         if(block.type === 'blank') continue
-        // console.log("block",block)
         if(block.type === 'para') {
-            output += `<p>${block.content}</p>\n`
+            output += `<p>${markdown_block_to_html(parse_markdown_content(block.content))}</p>\n`
             continue
         }
         if(block.type === 'header') {
-            output += `<h${block.level}>${block.content}</h${block.level}>\n`
+            output += `<h${block.level}>${markdown_block_to_html(parse_markdown_content(block.content))}</h${block.level}>\n`
             continue
         }
         if(block.type === 'li') {
-            output += `<li>${block.content}</li>\n`
+            output += `<li>${markdown_block_to_html(parse_markdown_content(block.content))}</li>\n`
             continue
         }
         const SUPPORTED_LANGUAGES = ['javascript']
