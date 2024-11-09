@@ -20,7 +20,12 @@ export type Codeblock = {
     language:string,
 } & Block
 
-// const code  = (language:string,content:string) => ({type:'CODE', language, content})
+export type MDSpanType = "plain" | "bold" | "italic" | "code" | "link"
+export type MDStandardSpan = [MDSpanType, string]
+export type MDLinkSpan = ["link", string, string, string]
+export type MDSpan = MDStandardSpan | MDLinkSpan
+
+
 export function parse_markdown_blocks(str:string) {
     // let parser = {}
     const grammar = ohm.grammar(`
@@ -90,13 +95,13 @@ MarkdownInner {
         _terminal() { return this.sourceString },
         _iter:(...children) => children.map(c => c.content()),
         plain(a) {return ['plain',a.content().join("")] },
-        bold(_1,a,_2) { return ['bold',a.content().join("")] },
-        italic(_1,a,_2) { return ['italic',a.content().join("")] },
-        code:(_1,a,_2) => ['code',a.content().join("")],
+        bold(_1,a,_2) { return (['bold',a.content().join("")]) as MDSpan },
+        italic(_1,a,_2) { return (['italic',a.content().join("")]) as MDSpan },
+        code:(_1,a,_2) => (['code',a.content().join("")]) as MDSpan,
         link:(img,_1,text,_2,_3,url,_4) => ['link',
             text.content().join(""),
             url.content().join(""),
-            img.content().join("")]
+            img.content().join("")] as MDSpan
     })
     let match = grammar.match(text)
     if(match.failed()) {
@@ -107,15 +112,4 @@ MarkdownInner {
         return semantics(match).content()
     }
 }
-// export async function parse_markdown(raw_markdown:string) {
-//     // l('parsing raw markdown',raw_markdown)
-//     let blocks = parse_markdown_blocks(raw_markdown)
-//     // l("blocks are",blocks)
-//     return blocks.map(block => {
-//         // l("type is",block.type)
-//         if(block.type === 'P') return parse_markdown_content(block)
-//         if(block.type === 'LI') return parse_markdown_content(block)
-//         return block
-//     })
-// }
 

@@ -3,7 +3,7 @@ import {parseXml, XmlElement, XmlText} from "@rgrove/parse-xml";
 // import {promises as fs} from "fs";
 import {codeToHtml} from "shiki";
 import {Docset} from "./docset.js";
-import {Block, BlockImage, parse_markdown_blocks, parse_markdown_content} from "./markdown.js";
+import {Block, BlockImage, MDLinkSpan, MDSpan, parse_markdown_blocks, parse_markdown_content} from "./markdown.js";
 type VisitorCallback = (e:XmlElement) => Promise<void>
 type VisitorTextCallback = (e:XmlText) => Promise<void>
 type VisitorOptions = {
@@ -288,18 +288,21 @@ const code = makeElem('code')
 const bold = makeElem('b')
 const italic = makeElem('i')
 
-function markdown_inline_to_html(span: [string, string]) {
+function markdown_inline_to_html(span: MDSpan) {
     const type = span[0]
     if(type === 'bold') return bold(span[1])
     if(type === 'plain') return span[1]
     if(type === 'code') return code(span[1])
     if(type === 'italic') return italic(span[1])
-    if(type === 'link') return `<a href="${span[2]}">${span[1]}</a>`
+    if(type === 'link') {
+        const ld = span as MDLinkSpan
+        return `<a href="${ld[2]}">${ld[1]}</a>`
+    }
     console.warn("unsupported span type",span)
     return span
 }
 
-function markdown_block_to_html(spans: [string,string][]) {
+function markdown_block_to_html(spans: MDSpan[]) {
     let output = ""
     for(let span of spans) {
         output += markdown_inline_to_html(span)
