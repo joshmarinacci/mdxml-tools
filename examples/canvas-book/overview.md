@@ -108,7 +108,14 @@ support it to some extent. Even Internet Explorer supports it starting with IE
 
 On the mobile side all recent smartphone platforms support it because most of them are
 based on WebKit, which has long had good support. I know for sure iOS, Android and Windows Phone 8
-support it.
+support it. I believe BlackBerry does, at least on the PlayBook. Windows Phone 7 does not, but it may come in a future update.
+
+<table>
+<tr><th>Mobile Browser</th><th>Version</th></tr>
+<tr><td>iOS</td><td>all</td></tr>
+<tr><td>webOS</td><td>all</td></tr>
+<tr><td>Android</td><td>2.0+</td></tr>
+</table>
 
 Now, not every mobile device has very complete or __fast__ support for Canvas, so
 we'll look at how to optimize our code for mobile devices later in the

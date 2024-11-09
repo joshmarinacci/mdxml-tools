@@ -107,3 +107,15 @@ a {
     text-underline-offset: 0.2rem;
 }
 
+table {
+    border: 1px solid gray;
+    border-collapse: collapse;
+}
+table td, table th {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid gray;
+}
+table th {
+    color: white;
+    background-color: gray;
+}
