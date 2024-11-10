@@ -228,9 +228,9 @@ bit of carefully chosen randomness.
 
 
 
-## Sprite Animation
+# Sprite Animation
 
-# What is a Sprite?
+## What is a Sprite?
 
 The final major kind of animation is sprite animation.  So what is a sprite?
 
@@ -242,7 +242,7 @@ character in different poses. This is what gives you different frames of
 animation. This is the classic flip-book style of animation: simply flip through
 different drawings over and over.
 
-# Why and When to use Sprites?
+## Why and When to use Sprites?
 
 Sprites are good for a few of things.
 
@@ -251,7 +251,7 @@ Sprites are good for a few of things.
 * Third: sprites are fast to download and draw as part of a sheet. It lets you download a single image for your entire set of sprites, which will download much faster than getting a bunch of separate images.  They typically also compress better. Finally, it uses less memory to have one large image than a bunch of smaller ones.
 * Finally: sprites are great for working with animation that comes out of a drawing tool such as photoshop. the code simply flips between images but it doesn't care what is in the image. This means your artist could easily update the graphics and animation without touching the code. Just drop in a new sprite sheet and you are set.
 
-# Drawing Sprites
+## Drawing Sprites
 
 Sprites are easy to draw using the `drawImage` function.  This function can draw
 and stretch a portion of an image by specifying different source and destination
@@ -271,7 +271,7 @@ context.drawImage(
     );
 ```
 
-# Sprite Animation
+## Sprite Animation
 
 As you can see in the full sprite sheet, this is really the same object drawn in
 different frames of an animation, so now let's flip through the different
