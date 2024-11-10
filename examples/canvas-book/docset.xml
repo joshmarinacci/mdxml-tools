@@ -1,8 +1,24 @@
 <docset title="canvas book">
     <page src="overview.md" title="Overview"/>
-    <page src="pagex.xml" title="Page 1"/>
     <resource src="images/redrect.png"/>
     <resource src="images/coords.png"/>
     <resource src="images/screenshot1.png"/>
     <resource src="images/screenshot2.png"/>
+
+    <page src="02a_handson_charts.md" title="Hands On Charts"/>
+    <resource src="chapter2/barchart1.png"/>
+    <resource src="chapter2/barchart2.png"/>
+    <resource src="chapter2/barchart2_5.png"/>
+    <resource src="chapter2/barchart3.png"/>
+    <resource src="chapter2/piechart1.png"/>
+    <resource src="chapter2/piechart2.png"/>
+
+
+
+    <page src="03a_advanced_drawing.md" title="Advanced Drawing and Events"/>
+
+    <page src="04a_animation.md" title="Animation"/>
+    <resource src="chapter4/particles.png"/>
+    <resource src="chapter4/sprite.png"/>
+
 </docset>
