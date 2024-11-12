@@ -1,0 +1,9 @@
+<docset title="canvas book">
+    <page src="javascript.md" title="JavaScript"/>
+    <page src="macos.md" title="MacOS"/>
+    <page src="rust.md" title="Rust"/>
+    <page src="ruby.md" title="Ruby"/>
+    <page src="circuitpython.md" title="Circuit Python"/>
+    <page src="git.md" title="Git and GitHub"/>
+    <page src="assemblyscript.md" title="Assembly Script"/>
+</docset>

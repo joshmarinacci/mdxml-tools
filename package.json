@@ -12,6 +12,7 @@
     "render": "npm run build && node build/cli.js --serve --outdir=temp --resources=resources --infile=examples/features/features.xml --browser",
     "render-docset": "npm run build && node build/cli.js --outdir=temp --resources=resources --infile=examples/docset/docset.xml --docset --serve --browser",
     "render-canvas": "npm run build && node build/cli.js --outdir=temp --resources=resources --infile=examples/canvas-book/docset.xml --docset --serve",
+    "render-brain": "npm run build && node build/cli.js --outdir=temp --resources=resources --infile=examples/brain/docset.xml --docset --serve",
     "test-recurse": "npm run build && node build/cli.js --outdir=temp --resources=resources --infile=examples/docset/docset.xml --docset",
     "automated": "npm run build && node build/cli.js --serve --outdir=temp --resources=resources",
     "build": "npm run clean && node build.js",
