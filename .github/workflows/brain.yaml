@@ -17,4 +17,4 @@ jobs:
         with:
           cache: npm
       - run: npm ci
-      - run: npm run render-brain
+      - run: npm run build-brain
