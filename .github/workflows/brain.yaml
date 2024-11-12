@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest===
     env:
       USERNAME: "dummy"
       PASSWORD: "bad-password"
@@ -18,3 +18,14 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build-brain
+        #      - run: scp temp/* deployman@joshy.org:sites/apps.josh.earth/brain
+      - name: copy file with ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: joshy.org
+          username: deployman
+          password: "bad-password"
+          port: 22
+          source: "temp/git.html"
+          target: /home/joshy/sites/apps.josh.earth/brain
+
