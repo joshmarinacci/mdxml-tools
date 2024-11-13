@@ -1,16 +1,17 @@
 # Javascript, Node Brain
 
 
-Create react app with typescript and full tests and react
-``` shell
+Create react app with typescript and full tests and react.
+
+``` javascript
 npx create-react-app my-app --template typescript
 ```
 
-To make jest work right with create-react-app and typescript, add this to the `package.json` file
+To make jest work right with create-react-app and typescript, add this to the `package.json` file:
 
-```json
-“jest”: {
-  “transformIgnorePatterns”: [
+``` json
+"jest": {
+  "transformIgnorePatterns": [
   ]
 }
 ```
