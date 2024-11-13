@@ -39,6 +39,7 @@ function renderHeader() {
     return `<html>
 <head>
     <title>doc title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
     <link rel="stylesheet" href="./style.css"/>
 <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">-->
 <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>-->
