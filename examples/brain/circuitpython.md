@@ -1,5 +1,26 @@
 # CircuitPython Brain
-#brain #circuitpython
+
+
+## general
+
+### Load JSON from disk
+
+```json
+{
+	"foo":{
+		"bar":"baz"
+	}
+}
+```
+
+```python
+config = json.load(open("config.json",'rb'))
+print(config['foo']['bar'])
+```
+
+
+
+
 
 [CircuitPython Tricks](https://github.com/todbot/circuitpython-tricks)
 
@@ -25,24 +46,6 @@
 
 
 
-
-# general
-
-Load JSON from disk
-
-```json
-{
-	"foo":{
-		"bar":"baz"
-	}
-}
-```
-
-```python
-
-config = json.load(open("config.json",'rb'))
-print(config['foo']['bar'])
-```
 
 ### reference board pins by string name
 

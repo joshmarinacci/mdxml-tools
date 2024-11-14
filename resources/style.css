@@ -10,6 +10,8 @@ html, body {
 }
 body {
     position: relative;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
 }
 
 /*    layout   */
@@ -17,17 +19,22 @@ article {
     margin: 0 auto;
     max-width: 40rem;
     padding:0;
+    grid-column: 2;
+    grid-row: 1;
+    overflow: hidden;
 }
 nav {
-    position: absolute;
+    /*position: absolute;*/
     max-width: 10rem;
-    top:0;
+    /*top:0;*/
 }
 nav.docset {
-    left: 0;
+    /*left: 0;*/
+    grid-column: 1;
 }
 nav.toc {
-    right: 0;
+    /*right: 0;*/
+    grid-column: 3;
 }
 
 
