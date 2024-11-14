@@ -90,6 +90,26 @@ print("some text", file=ptermx, end="")
 
 
 
+## TDeck
+
+Get input events
+
+```python
+
+import time
+import tdeck
+
+while True:
+    time.sleep(0.01)
+    keypress = tdeck.get_keypress()
+    if keypress:
+        print("keypress-", keypress)
+     for p, c in tdeck.get_trackball():
+        if c > 0:
+            print(f"{p}: {c}")
+
+
+```
 
 ## Network
 
