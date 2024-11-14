@@ -3,7 +3,7 @@
 
 Create react app with typescript and full tests and react.
 
-``` javascript
+``` shell
 npx create-react-app my-app --template typescript
 ```
 

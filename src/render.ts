@@ -370,11 +370,11 @@ export async function renderMarkdownPage(str: string, url_map: Map<any, any>, do
                 output += await formatCodeBlock(text, undefined)
                 continue
             }
-            if(!SUPPORTED_LANGUAGES.includes(lang)) {
-                console.warn("unsupported language",lang)
-                output += await formatCodeBlock(text, undefined)
-                continue
-            }
+            // if(!SUPPORTED_LANGUAGES.includes(lang)) {
+            //     console.warn("unsupported language",lang)
+            //     output += await formatCodeBlock(text, undefined)
+            //     continue
+            // }
             output += await formatCodeBlock(text, lang)
             continue
         }
