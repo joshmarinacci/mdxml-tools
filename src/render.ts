@@ -354,7 +354,8 @@ export async function renderMarkdownPage(str: string, url_map: Map<any, any>, do
             continue
         }
         if(block.type === 'header') {
-            output += `<h${block.level}>${markdown_block_to_html(parse_markdown_content(block.content))}</h${block.level}>\n`
+            const slug = slugForHeader(block.content)
+            output += `<h${block.level} id="${slug}">${markdown_block_to_html(parse_markdown_content(block.content))}</h${block.level}>\n`
             continue
         }
         if(block.type === 'li') {
