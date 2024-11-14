@@ -1,7 +1,7 @@
 # CircuitPython Brain
 
 
-## general
+## files
 
 ### Load JSON from disk
 
@@ -16,6 +16,76 @@
 ```python
 config = json.load(open("config.json",'rb'))
 print(config['foo']['bar'])
+```
+
+### read text file to string
+
+```python
+with open("./blog.html", "r") as txt:
+    html = txt.read()
+```
+
+
+### unit tests
+
+```python
+import unittest
+
+class BasicParsing(unittest.TestCase):
+    def test_thing(self):
+        self.assertEqual("foo","bar")
+
+if __name__ == '__main__':
+    unittest.main()
+
+```
+
+
+
+## display io
+
+
+### Terminal
+
+```python
+import terminalio
+import displayio
+
+# size of font glyph
+fontx, fonty = terminalio.FONT.get_bounding_box()
+
+# adjust palette if desired
+plain_palette = displayio.Palette(2)
+plain_palette[0] = 0x000000
+plain_palette[1] = 0x33ff33
+
+# create grid using the font 
+# width and height in tiles
+# x and y in pixels
+pgrid = displayio.TileGrid(terminalio.FONT.bitmap,
+                           x=0,
+                           y=0,
+                           width=display.width // fontx,
+                           height=display.height // fonty,
+                           tile_width=fontx,
+                           tile_height=fonty,
+                           pixel_shader=plain_palette)
+
+# terminal attached to the tilegrid
+ptermx = terminalio.Terminal(pgrid, terminalio.FONT)
+
+# add to the screen
+display.root_group.append(pgrid)
+```
+
+Print to the terminal with `print`:
+
+```python
+# with newline
+print("some text", file=ptermx, end="\r\n")
+
+# without newline
+print("some text", file=ptermx, end="")
 ```
 
 
