@@ -24,7 +24,7 @@ jobs:
         with:
           host: joshy.org
           username: deployman
-          password: "bad-password"
+          password: ${SECRETS.DEPLOYMAN_PASSWORD}
           port: 22
           source: "temp/git.html"
           target: /home/joshy/sites/apps.josh.earth/brain
