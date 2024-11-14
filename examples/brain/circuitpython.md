@@ -91,6 +91,32 @@ print("some text", file=ptermx, end="")
 
 
 
+## Network
+
+### list wifi 
+
+```python
+for network in wifi.radio.start_scanning_networks():
+    print(f"{network.ssid} [Ch:{network.channel}] RSSI: {network.rssi}")
+```
+
+### connect to wifi
+
+```python
+wifi.radio.connect(ssid, password)
+```
+
+## fetch HTTP request
+
+```python
+# Initalize Wifi, Socket Pool, Request Session
+pool = adafruit_connection_manager.get_radio_socketpool(wifi.radio)
+ssl_context = adafruit_connection_manager.get_radio_ssl_context(wifi.radio)
+requests = adafruit_requests.Session(pool, ssl_context)
+
+with requests.get("http://webpage.site") as response:
+    print(response.text)
+```
 
 [CircuitPython Tricks](https://github.com/todbot/circuitpython-tricks)
 
