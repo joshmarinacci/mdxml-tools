@@ -51,7 +51,7 @@ if __name__ == '__main__':
 import terminalio
 import displayio
 
-# size of font glyph
+# size of each font glyph (this is a monospaced font)
 fontx, fonty = terminalio.FONT.get_bounding_box()
 
 # adjust palette if desired
