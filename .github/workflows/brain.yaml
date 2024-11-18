@@ -25,6 +25,7 @@ jobs:
           host: joshy.org
           username: deployman
           port: 22
+          key: ${{secrets.DEPLOYMAN_PRIVATE_KEY}}
           source: "temp/git.html"
           target: /home/joshy/sites/apps.josh.earth/brain
 
