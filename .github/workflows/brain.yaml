@@ -23,8 +23,7 @@ jobs:
         uses: appleboy/scp-action@v0.1.7
         with:
           host: joshy.org
-          username: deploymanfoo
-          password: ${SECRETS.DEPLOYMAN_PASSWORD}
+          username: deployman
           port: 22
           source: "temp/git.html"
           target: /home/joshy/sites/apps.josh.earth/brain
