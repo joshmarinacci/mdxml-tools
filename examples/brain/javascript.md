@@ -28,7 +28,7 @@ npm cache clean --force
 
 
 run npm script in a different dir with
-```shell
+``` shell
 npm --prefix <path> run <command>
 ```
 
