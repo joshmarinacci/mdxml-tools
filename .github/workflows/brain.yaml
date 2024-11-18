@@ -7,9 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      USERNAME: "dummy"
-      PASSWORD: "bad-password"
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -18,7 +15,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build-brain
-        #      - run: scp temp/* deployman@joshy.org:sites/apps.josh.earth/brain
       - name: copy file with ssh password
         uses: appleboy/scp-action@v0.1.7
         with:
