@@ -2,6 +2,7 @@
 
 
 
+##  screenshots
 * screen capture: command-shift-5
 * Choose window and mode
 * Click to take the screenshot
@@ -10,9 +11,20 @@
 * Option-control-click to put into the clipboard and not show window drop shadows
 
 
+## install brew and other tools
+Copy the script from [here](https://brew.sh) and paste into the terminal.
+
+```shell
+brew doctor
+brew install nodejs
+```
 
 
-# save image out of google docs
+## cleanup unused applications
+
+`brew install pearcleaner` then run Pearcleaner.app.
+
+## save image out of google docs
 
 Shift right click on the image to get the browser’s menu instead of google docs, and then choose ‘copy’. Go to Preview and cmd-N for new to create a new image, which will use what’s in the clipboard.
 

@@ -1,6 +1,59 @@
 # CircuitPython Brain
 
 
+## install python and circup
+
+on macos
+
+```shell
+# install pyenv
+brew install pyenv pyenv-virtualenv
+
+# list all available python variants
+pyenv install -l
+
+# install latest 3.x.x python
+pyenv install 3 
+
+# add to the shell
+echo 'PATH=$(pyenv root)/shims:$PATH' >> ~/.zshrc
+````
+
+Now restart your shell / open a new terminal window.
+
+Now install circup
+
+```shell
+pip install setuptools
+pip install circup
+circup --version
+```
+
+## circup commands
+
+* List all out of date modules: `circup list`
+* update all out of date modules: `circup update`
+* install a new module: `circup install <module_name>`
+* show `circup show`
+
+```shell
+# list all out of date modules
+```
+
+## PyCharm Support
+
+Under project settings / Python interpreter click the `+` button to
+install new packages. Install `circuitpython-stubs`
+
+then libraries you are using. common ones include
+
+* adafruit-circuitpython-connectionmanager
+* adafruit-circuitpython-requests
+* adafruit-circuitpython-ntp
+
+
+Full details [here](https://learn.adafruit.com/welcome-to-circuitpython/pycharm-and-circuitpython)
+
 ## files
 
 ### Load JSON from disk
@@ -174,13 +227,13 @@ pin = getattr(board,'D0')
 
 
 
-# convert a PNG to a indexed color bitmap
+## convert a PNG to a indexed color bitmap
 
 ```shell
 convert digits.png -colors 64 -type palette -compress None BMP3:digits.bmp
 ```
 
-# use a custom font in a label or button
+## use a custom font in a label or button
 
 [Overview | Custom Fonts for CircuitPython Displays | Adafruit Learning System](https://learn.adafruit.com/custom-fonts-for-pyportal-circuitpython-display/overview)
 ### Convert  truetype font to bitmap
