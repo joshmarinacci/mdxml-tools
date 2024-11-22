@@ -108,7 +108,7 @@ MarkdownInner {
     if(match.failed()) {
         console.log("match failed on block",text)
         // text.content = [['plain',text.content]]
-        return "match failed on block " + text
+        return ""
     } else {
         return semantics(match).content()
     }

@@ -8,9 +8,10 @@ import {
     parse_markdown_blocks,
     parse_markdown_content
 } from "./markdown.js";
-import {find_markdown_toc, find_xml_toc, TOCEntry} from "./toc.js";
+import {find_markdown_toc, find_xml_toc, renderTOC, TOCEntry} from "./toc.js";
 import {Visitor} from "./visitor.js";
 import {childrenToText} from "./xml.js";
+import {slugForHeader} from "./util.js";
 
 
 function renderHeader() {
@@ -29,20 +30,6 @@ function renderFooter() {
     return `
 <!--<script>hljs.highlightAll();</script>-->
 </body></html>`
-}
-function slugForHeader(title:string) {
-    return title.replaceAll(' ','_').toLowerCase()
-}
-function renderTOCLink(entry:TOCEntry) {
-    const slug = slugForHeader(entry.text)
-    return `<li><a href='#${slug}' class='toc-${entry.level}'>${entry.text}</a></li>`
-}
-function renderTOC(toc: TOCEntry[]) {
-    return `<nav class="toc">
-    <ul>
-    ${toc.map(entry => renderTOCLink(entry)).join("\n")}
-    </ul>
-    </nav>`
 }
 
 function renderHeaderStart(e: XmlElement) {

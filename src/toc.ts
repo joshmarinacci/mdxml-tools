@@ -1,7 +1,8 @@
 import {XmlElement} from "@rgrove/parse-xml";
 import {Block, Header} from "./markdown.js";
-import { Visitor } from "./visitor.js";
+import {Visitor} from "./visitor.js";
 import {childrenToText} from "./xml.js";
+import {slugForHeader} from "./util.js";
 
 export type TOCEntry = {
     level: number;
@@ -29,7 +30,6 @@ export async function find_markdown_toc(blocks: Block[]): Promise<TOCEntry[]> {
     const TOC: TOCEntry[] = []
     for (let block of blocks) {
         if (block.type === 'header') {
-            console.log("found a header",block)
             const entry:TOCEntry = {
                 level: (block as Header).level,
                 text: block.content,
@@ -38,4 +38,46 @@ export async function find_markdown_toc(blocks: Block[]): Promise<TOCEntry[]> {
         }
     }
     return TOC
+}
+
+function renderTOCLink(entry: TOCEntry) {
+    const slug = slugForHeader(entry.text)
+    return `<a href='#${slug}' class='toc-${entry.level}'>${entry.text}</a>`
+}
+
+function renderTOCList(entries:TOCEntry[]):string {
+    let depth = 0
+    let output = ""
+    for(let entry of entries) {
+        if (entry.level > depth) {
+            output += "<ul>"
+            depth += 1
+            output += "<li>"
+            output += renderTOCLink(entry)
+            continue
+        }
+        if (entry.level == depth) {
+            output += "</li>"
+            output += "<li>"
+            output += renderTOCLink(entry)
+            continue
+        }
+        if (entry.level < depth) {
+            output += "</li>"
+            depth -= 1
+            output += "</ul>"
+            output += "</li>"
+            output += "<li>"
+            output += renderTOCLink(entry)
+            continue
+        }
+    }
+    return output
+}
+export function renderTOC(toc: TOCEntry[]) {
+    return `<nav class="toc">
+    <ul>
+    ${renderTOCList(toc)}
+    </ul>
+    </nav>`
 }
