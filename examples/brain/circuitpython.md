@@ -88,10 +88,29 @@ of power in a tiny formfactor.
 * my [example code](https://github.com/joshmarinacci/waveshare_lcd_test) to show off using touch and other functions
 * another [device repo](https://github.com/aedile/circuit_python_wsRP2040128/tree/main) for the waveshare
 
+### Boot
+
+Hold down the _boot_ button on the back of the device while plugging in the USB-C cable to your laptop. 
+
 ### Display
 
 To access the display you need to install `gc9a01`, a separate driver library, with
-`circup install gc9a01` then initialize it
+`circup install gc9a01` then initialize it. Note that the touch and non-touch versions
+are slightly different.  On the non-touch version reset is set to LCD_RST. On the touch version it is pin 13 (board.GP13), so initialize it like this:
+
+```python
+spi = busio.SPI(clock=board.LCD_CLK, MOSI=board.LCD_DIN)
+# LCD_RST is 12 in regular version
+# but we need 13 for the touch version
+display_bus = displayio.FourWire(spi, 
+   command=board.LCD_DC, 
+   chip_select=board.LCD_CS,
+   reset=board.GP13)
+display = gc9a01.GC9A01(display_bus, 
+   width=240, 
+   height=240, 
+   backlight_pin=board.LCD_BL)
+```
 
 ## Sharp Memory display
 
