@@ -1,6 +1,5 @@
 # CircuitPython Brain
 
-
 ## install python and circup
 
 on macos
@@ -54,6 +53,151 @@ then libraries you are using. common ones include
 
 Full details [here](https://learn.adafruit.com/welcome-to-circuitpython/pycharm-and-circuitpython)
 
+# Specific Devices
+
+## TDeck
+
+Get input events
+
+```python
+
+import time
+import tdeck
+
+while True:
+    time.sleep(0.01)
+    keypress = tdeck.get_keypress()
+    if keypress:
+        print("keypress-", keypress)
+     for p, c in tdeck.get_trackball():
+        if c > 0:
+            print(f"{p}: {c}")
+
+
+```
+
+## Waveshare round 1.28 LCD RP2040
+
+The [Waveshare round 1.28 LCD](https://github.com/joshmarinacci/waveshare_lcd_test) is a set
+of cheap devices which run CircuitPython and have a USB connection. They have a lot
+of power in a tiny formfactor.
+
+### Code
+
+* my module [waveshare128.py](https://github.com/joshmarinacci/waveshare_lcd_test/blob/main/waveshare128.py) to expose all waveshare specific functions
+* my [example code](https://github.com/joshmarinacci/waveshare_lcd_test) to show off using touch and other functions
+* another [device repo](https://github.com/aedile/circuit_python_wsRP2040128/tree/main) for the waveshare
+
+### Display
+
+To access the display you need to install `gc9a01`, a separate driver library, with
+`circup install gc9a01` then initialize it
+
+## Sharp Memory display
+
+Assuming the display is connected to the standard SPI connections on an RP2040
+
+```python
+displayio.release_displays()
+bus = busio.SPI(board.SCK, MOSI=board.MOSI)
+chip_select_pin = board.D25
+framebuffer = sharpdisplay.SharpMemoryFramebuffer(bus, chip_select_pin, width=144, height=168)
+display = framebufferio.FramebufferDisplay(framebuffer)
+display.root_group = displayio.CIRCUITPYTHON_TERMINAL
+while True:
+    print("hello")
+    pass
+```
+
+
+# APIs
+
+## USB
+
+### RP2040 with USB Host
+
+```python
+usb_host.Port(board.USB_HOST_DATA_PLUS, board.USB_HOST_DATA_MINUS)
+if supervisor.runtime.usb_connected:
+    print("USB<host>!")
+else:
+    print("!USB<host>")
+
+while True:
+    print(sys.stdin.read(1))
+```
+
+### Scan for devices on USB host
+
+```python
+while True:
+    print("searching for devices")
+    for device in usb.core.find(find_all=True):
+        print("pid", hex(device.idProduct))
+        print("vid", hex(device.idVendor))
+        print("man", device.manufacturer)
+        print("product", device.product)
+        print("serial", device.serial_number)
+        print("config[0]:")
+        config_descriptor = adafruit_usb_host_descriptors.get_configuration_descriptor(
+            device, 0
+        )
+
+        i = 0
+        while i < len(config_descriptor):
+            descriptor_len = config_descriptor[i]
+            descriptor_type = config_descriptor[i + 1]
+            if descriptor_type == adafruit_usb_host_descriptors.DESC_CONFIGURATION:
+                config_value = config_descriptor[i + 5]
+                print(f" value {config_value:d}")
+            elif descriptor_type == adafruit_usb_host_descriptors.DESC_INTERFACE:
+                interface_number = config_descriptor[i + 2]
+                interface_class = config_descriptor[i + 5]
+                interface_subclass = config_descriptor[i + 6]
+                print(f" interface[{interface_number:d}]")
+                print(
+                    f"  class {interface_class:02x} subclass {interface_subclass:02x}"
+                )
+            elif descriptor_type == adafruit_usb_host_descriptors.DESC_ENDPOINT:
+                endpoint_address = config_descriptor[i + 2]
+                if endpoint_address & DIR_IN:
+                    print(f"  IN {endpoint_address:02x}")
+                else:
+                    print(f"  OUT {endpoint_address:02x}")
+            i += descriptor_len
+        print()
+    time.sleep(5)
+```
+
+## Network
+
+### list wifi
+
+```python
+for network in wifi.radio.start_scanning_networks():
+    print(f"{network.ssid} [Ch:{network.channel}] RSSI: {network.rssi}")
+```
+
+### connect to wifi
+
+```python
+wifi.radio.connect(ssid, password)
+```
+
+### fetch HTTP request
+
+```python
+# Initalize Wifi, Socket Pool, Request Session
+pool = adafruit_connection_manager.get_radio_socketpool(wifi.radio)
+ssl_context = adafruit_connection_manager.get_radio_ssl_context(wifi.radio)
+requests = adafruit_requests.Session(pool, ssl_context)
+
+with requests.get("http://webpage.site") as response:
+    print(response.text)
+```
+
+[CircuitPython Tricks](https://github.com/todbot/circuitpython-tricks)
+
 ## files
 
 ### Load JSON from disk
@@ -92,8 +236,6 @@ if __name__ == '__main__':
     unittest.main()
 
 ```
-
-
 
 ## display io
 
@@ -142,56 +284,6 @@ print("some text", file=ptermx, end="")
 ```
 
 
-
-## TDeck
-
-Get input events
-
-```python
-
-import time
-import tdeck
-
-while True:
-    time.sleep(0.01)
-    keypress = tdeck.get_keypress()
-    if keypress:
-        print("keypress-", keypress)
-     for p, c in tdeck.get_trackball():
-        if c > 0:
-            print(f"{p}: {c}")
-
-
-```
-
-## Network
-
-### list wifi 
-
-```python
-for network in wifi.radio.start_scanning_networks():
-    print(f"{network.ssid} [Ch:{network.channel}] RSSI: {network.rssi}")
-```
-
-### connect to wifi
-
-```python
-wifi.radio.connect(ssid, password)
-```
-
-## fetch HTTP request
-
-```python
-# Initalize Wifi, Socket Pool, Request Session
-pool = adafruit_connection_manager.get_radio_socketpool(wifi.radio)
-ssl_context = adafruit_connection_manager.get_radio_ssl_context(wifi.radio)
-requests = adafruit_requests.Session(pool, ssl_context)
-
-with requests.get("http://webpage.site") as response:
-    print(response.text)
-```
-
-[CircuitPython Tricks](https://github.com/todbot/circuitpython-tricks)
 
 # QT Py (not the rp2040 version)
 * [learn page](https://learn.adafruit.com/adafruit-qt-py)
@@ -389,39 +481,8 @@ Note: The `--no-ignore-missing-unicodes` option will print an error if we typed 
 otfbdf icons.ttf -o icons.bdf -p 16
 ```
 
-And now we can use it in our program.  Here it is on my prototype device.
-
-C’est magnifique
 
 
-
-
-
-
-
-
-
-# gfx work
-These little SPI screens sometimes have a vertical scroll mode.  This is not exposed by the CP driver, but we can manually send commands if we want. We must setup the vertical scrolling area by sending VSCRDEF (0x33) with the distance from the top of the screen to the top of the scrolling area, then the height of the scrolling area.
-
-Then, when we want to scroll, we send VSCSAD (0x37) with a scroll start point. Setting the start point to the top of the scroll area will make it look like it’s not scrolled at all. Then you can keep adding to the scroll offset to draw further down.
-
-This lets us continuously scroll part of the screen, but it doesn’t let us draw new content. Every part of the scrolling area is visible at all times.  What we can do is draw the bottom line of the scroll area with new content, then scroll it up.
-
-If the new line is going to be at scroll 100, then draw a line there and it will join the scroll going up.
-
-**Example code**
-
-I’ve concluded that this scrolling API is largely useless. First it’s vertical only, not horizontal. Additionally, the screen doesn’t have any extra display memory so you can’t draw offscreen and then scroll it into view.  Instead you need to scroll first and then draw into the newly exposed area.  This **does** work, but because displayio doesn’t know about it all of the coordinates of everything in your scene will be messed up. That means you have to draw to the screen directly with your own code, which sort of defeats the purpose of having this cool gfx api to begin with.  I was able to make it work by creating a bitmap the same size of the screen and updating just exposed parts of the bitmap on scroll.  Essentially this turns bitmap into a simple immediate mode API.  By itself bitmap can only set pixels for fill, but with bitmaptools  we can do fast copies from other bitmaps (possibly fonts), as well as draw lines or even do alpha compositing. But again, we do all the drawing on our own. There’s no way to scroll in, say, an adafruit.Label.
-
-Due to the limitations of vertical scrolling I’ve decided not to pursue it further. Instead I’ll focus on other speedups.
-
-
-For my watch project I also want a zooming space field screen.  Rather than scrolling the stars come from the middle of the screen and accelerate outwards.  The stars are a single pixel each, so theoretically 20 stars would involve at most 40 pixels of data per frame (for erasing and then drawing again). In practice it was still slow. Why?
-
-The displayio classes can auto-redraw only the changed parts of the by tracking dirty regions. However, the bitmap only has a **single** dirty area. If you set three pixels it will calculate the smallest rectangle that holds all three pixels.  That means if the pixels are far apart (as in my space sim) then the dirty area will include a lot of dead space in-between. Wasted bandwidth.
-
-To fix this I turned off auto refresh and then manually refresh the display after **each particle** is draw, rather than after all of them are drawn. For most stars this results in a tiny dirty area, usually just a few pixels.  With that change I can now get 200 particles running at once on a 240x240 SPI display while keeping a respectable frame rate. Again, I’m treating the bitmap like it’s an immediate mode API, just as I would on a desktop computer that didn’t have a GPU.
 
 
 
