@@ -107,6 +107,7 @@ MarkdownInner {
     let match = grammar.match(text)
     if(match.failed()) {
         console.log("match failed on block",text)
+        console.log(match.message)
         // text.content = [['plain',text.content]]
         return ""
     } else {

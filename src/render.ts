@@ -15,20 +15,18 @@ import {slugForHeader} from "./util.js";
 
 
 function renderHeader() {
-    return `<html>
+    return `<!DOCTYPE html>
+    <html>
 <head>
     <title>doc title</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
     <link rel="stylesheet" href="./style.css"/>
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">-->
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>-->
 </head>
 <body>
 `
 }
 function renderFooter() {
     return `
-<!--<script>hljs.highlightAll();</script>-->
 </body></html>`
 }
 
@@ -276,7 +274,9 @@ export async function renderMarkdownPage(str: string, url_map: Map<any, any>, do
             continue
         }
         if(block.type === 'li') {
+            output += "<ul>"
             output += `<li>${markdown_block_to_html(parse_markdown_content(block.content))}</li>\n`
+            output += "</ul>"
             continue
         }
         const SUPPORTED_LANGUAGES = ['javascript']

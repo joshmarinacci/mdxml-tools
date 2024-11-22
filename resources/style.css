@@ -23,17 +23,11 @@ article {
     grid-row: 1;
     overflow: hidden;
 }
-nav {
-    /*position: absolute;*/
-    /*max-width: 10rem;*/
-    /*top:0;*/
-}
+
 nav.docset {
-    /*left: 0;*/
     grid-column: 1;
 }
 nav.toc {
-    /*right: 0;*/
     grid-column: 3;
 }
 
@@ -107,21 +101,21 @@ p code {
 
 /* links */
 
-a {
+article a {
     color: blue;
     text-decoration: underline;
     text-underline-offset: 0.2rem;
 }
 
-table {
+article table {
     border: 1px solid gray;
     border-collapse: collapse;
 }
-table td, table th {
+article table td, table th {
     padding: 0.25rem 0.5rem;
     border: 1px solid gray;
 }
-table th {
+article table th {
     color: white;
     background-color: gray;
 }
