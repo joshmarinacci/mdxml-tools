@@ -22,7 +22,7 @@
 * make a github action that uploads the artifacts using [this scp action](https://github.com/appleboy/scp-action?tab=readme-ov-file)
 
 action looks like
-``` yaml
+```yaml
 
 name: Publish Brain
 

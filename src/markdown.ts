@@ -84,8 +84,10 @@ MarkdownInner {
   block = para*
   para = link | bold | italic | code | plain
   plain = ( ~( "*" | "\`" | "[" | "__") any)+
-  bold = "*" (~"*" any)* "*"
-  italic = "__" (~"__" any)* "__"
+  bold   = "**" (~"**" any)* "**"   -- extended
+         | "*"  (~"*" any)*  "*"    -- standard
+  italic = "__" (~"__" any)* "__"   -- extended
+         | "_"  (~"_" any)*  "_"    -- standard
   code = "\`" (~"\`" any)* "\`"
   link = "!"? "[" (~"]" any)* "]" "(" (~")" any)* ")"
 }
@@ -96,8 +98,10 @@ MarkdownInner {
         _terminal() { return this.sourceString },
         _iter:(...children) => children.map(c => c.content()),
         plain(a) {return ['plain',a.content().join("")] },
-        bold(_1,a,_2) { return (['bold',a.content().join("")]) as MDSpan },
-        italic(_1,a,_2) { return (['italic',a.content().join("")]) as MDSpan },
+        bold_standard(_1,a,_2) { return (['bold',a.content().join("")]) as MDSpan },
+        bold_extended(_1,a,_2) { return (['bold',a.content().join("")]) as MDSpan },
+        italic_extended(_1,a,_2) { return (['italic',a.content().join("")]) as MDSpan },
+        italic_standard(_1,a,_2) { return (['italic',a.content().join("")]) as MDSpan },
         code:(_1,a,_2) => (['code',a.content().join("")]) as MDSpan,
         link:(img,_1,text,_2,_3,url,_4) => ['link',
             text.content().join(""),

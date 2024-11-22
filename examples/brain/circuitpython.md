@@ -1,8 +1,9 @@
-# CircuitPython Brain
+# CircuitPython
 
-## install python and circup
+## Installation and Setup
+### Install Python
 
-on macos
+MacOS instructions
 
 ```shell
 # install pyenv
@@ -20,7 +21,7 @@ echo 'PATH=$(pyenv root)/shims:$PATH' >> ~/.zshrc
 
 Now restart your shell / open a new terminal window.
 
-Now install circup
+### Install `circup`
 
 ```shell
 pip install setuptools
@@ -28,30 +29,25 @@ pip install circup
 circup --version
 ```
 
-## circup commands
+## `circup` commands
 
 * List all out of date modules: `circup list`
 * update all out of date modules: `circup update`
 * install a new module: `circup install <module_name>`
 * show `circup show`
 
-```shell
-# list all out of date modules
-```
+## PyCharm Setup
 
-## PyCharm Support
-
-Under project settings / Python interpreter click the `+` button to
-install new packages. Install `circuitpython-stubs`
-
-then libraries you are using. common ones include
+Under **Project Settings** / **Python interpreter** click the **+** button to
+install new packages. Install `circuitpython-stubs`, and then the
+libraries you are using. common ones include:
 
 * adafruit-circuitpython-connectionmanager
 * adafruit-circuitpython-requests
 * adafruit-circuitpython-ntp
 
 
-Full details [here](https://learn.adafruit.com/welcome-to-circuitpython/pycharm-and-circuitpython)
+Full details [here](https://learn.adafruit.com/welcome-to-circuitpython/pycharm-and-circuitpython).
 
 # Specific Devices
 
@@ -60,7 +56,6 @@ Full details [here](https://learn.adafruit.com/welcome-to-circuitpython/pycharm-
 Get input events
 
 ```python
-
 import time
 import tdeck
 
@@ -72,8 +67,6 @@ while True:
      for p, c in tdeck.get_trackball():
         if c > 0:
             print(f"{p}: {c}")
-
-
 ```
 
 ## Waveshare round 1.28 LCD RP2040
@@ -90,13 +83,13 @@ of power in a tiny formfactor.
 
 ### Boot
 
-Hold down the _boot_ button on the back of the device while plugging in the USB-C cable to your laptop. 
+Hold down the __boot__ button on the back of the device while plugging in the USB-C cable to your laptop. 
 
 ### Display
 
 To access the display you need to install `gc9a01`, a separate driver library, with
 `circup install gc9a01` then initialize it. Note that the touch and non-touch versions
-are slightly different.  On the non-touch version reset is set to LCD_RST. On the touch version it is pin 13 (board.GP13), so initialize it like this:
+are slightly different.  On the non-touch version reset is set to `LCD_RST`. On the touch version it is Pin 13 (`board.GP13`), so initialize it like this:
 
 ```python
 spi = busio.SPI(clock=board.LCD_CLK, MOSI=board.LCD_DIN)
@@ -220,14 +213,6 @@ with requests.get("http://webpage.site") as response:
 ## files
 
 ### Load JSON from disk
-
-```json
-{
-	"foo":{
-		"bar":"baz"
-	}
-}
-```
 
 ```python
 config = json.load(open("config.json",'rb'))
