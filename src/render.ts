@@ -1,40 +1,18 @@
 import {parseXml, XmlElement, XmlText} from "@rgrove/parse-xml";
-// import path from "path";
-// import {promises as fs} from "fs";
 import {codeToHtml} from "shiki";
 import {Docset} from "./docset.js";
-import {Block, BlockImage, MDLinkSpan, MDSpan, parse_markdown_blocks, parse_markdown_content} from "./markdown.js";
-type VisitorCallback = (e:XmlElement) => Promise<void>
-type VisitorTextCallback = (e:XmlText) => Promise<void>
-type VisitorOptions = {
-    enter: VisitorCallback,
-    text: VisitorTextCallback,
-    exit: VisitorCallback,
-}
+import {
+    BlockImage,
+    MDLinkSpan,
+    MDSpan,
+    parse_markdown_blocks,
+    parse_markdown_content
+} from "./markdown.js";
+import {find_markdown_toc, find_xml_toc, TOCEntry} from "./toc.js";
+import {Visitor} from "./visitor.js";
+import {childrenToText} from "./xml.js";
 
 
-class Visitor {
-    private opts: VisitorOptions;
-    constructor(opts:VisitorOptions) {
-        this.opts = opts
-    }
-    async visit(root: XmlElement) {
-        await this._visit(root, '')
-    }
-    private async _visit(el: XmlElement, s: string) {
-        // console.log(s,el.name)
-        await this.opts.enter(el)
-        for(let ch of el.children) {
-            if(ch instanceof XmlElement) {
-                await this._visit(ch,s+'  ')
-            }
-            if(ch instanceof XmlText) {
-                await this.opts.text(ch)
-            }
-        }
-        await this.opts.exit(el)
-    }
-}
 function renderHeader() {
     return `<html>
 <head>
@@ -56,8 +34,8 @@ function slugForHeader(title:string) {
     return title.replaceAll(' ','_').toLowerCase()
 }
 function renderTOCLink(entry:TOCEntry) {
-    const slug = slugForHeader(entry[1])
-    return `<li><a href='#${slug}' class='toc-${entry[0]}'>${entry[1]}</a></li>`
+    const slug = slugForHeader(entry.text)
+    return `<li><a href='#${slug}' class='toc-${entry.level}'>${entry.text}</a></li>`
 }
 function renderTOC(toc: TOCEntry[]) {
     return `<nav class="toc">
@@ -65,54 +43,6 @@ function renderTOC(toc: TOCEntry[]) {
     ${toc.map(entry => renderTOCLink(entry)).join("\n")}
     </ul>
     </nav>`
-}
-
-type CodeDecoration = {
-    start:number,
-    end:number,
-}
-function childrenToText(e: XmlElement):[string,CodeDecoration[]] {
-    let decs:CodeDecoration[] = []
-    let totalText = ""
-    e.children.forEach(ch => {
-        if(ch instanceof XmlText) {
-            totalText += ch.text
-            return
-        }
-        if(ch instanceof XmlElement) {
-            let [text] = childrenToText(ch)
-            decs.push({
-                start:totalText.length,
-                end: totalText.length + text.length,
-            })
-            totalText += text
-        }
-    })
-    return [totalText, decs]
-}
-type TOCEntry = [string,string]
-async function find_xml_toc(root: XmlElement) {
-    const TOC:TOCEntry[] = []
-    const toc_finder = new Visitor({
-        enter:async (e) => {
-            if(e.name === 'h1') TOC.push([e.name,childrenToText(e)[0]])
-            if(e.name === 'h2') TOC.push([e.name,childrenToText(e)[0]])
-            if(e.name === 'h3') TOC.push([e.name,childrenToText(e)[0]])
-        },
-        text: async (e) => {},
-        exit: async (e) => {}
-    })
-    await toc_finder.visit(root)
-    return TOC
-}
-async function find_markdown_toc(blocks:Block[]):Promise<TOCEntry[]> {
-    const TOC:TOCEntry[] = []
-    for(let block of blocks) {
-        if(block.type === 'header') {
-            TOC.push(['h1',block.content])
-        }
-    }
-    return TOC
 }
 
 function renderHeaderStart(e: XmlElement) {
@@ -368,6 +298,7 @@ export async function renderMarkdownPage(str: string, url_map: Map<any, any>, do
             const lang = block.language?.trim()
             if(!lang) {
                 console.warn("block is missing language")
+                // @ts-ignore
                 output += await formatCodeBlock(text, undefined)
                 continue
             }

@@ -92,6 +92,7 @@ MarkdownInner {
     `)
     let semantics = grammar.createSemantics()
     semantics.addOperation('content',{
+        // @ts-ignore
         _terminal() { return this.sourceString },
         _iter:(...children) => children.map(c => c.content()),
         plain(a) {return ['plain',a.content().join("")] },
