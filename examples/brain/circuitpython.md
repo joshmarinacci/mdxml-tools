@@ -51,7 +51,23 @@ Full details [here](https://learn.adafruit.com/welcome-to-circuitpython/pycharm-
 
 # Specific Devices
 
-## TDeck
+## LilyGo T-Deck
+
+### Install firmware
+
+The T-Deck firmware can be downloaded from [the usual location](https://circuitpython.org/board/lilygo_tdeck/) but it cannot enter bootloader mode as a USB drive like
+most other devices. Instead you must install CircuitPython using WebSerial, which only
+works in Chrome. 
+
+To install it, go to [the CircuitPython download page](https://circuitpython.org/board/lilygo_tdeck/) in Chrome and click
+the **Open Installer** button. A dialog will appear. Select 'Upgrade CircuitPython 9.2.1 Bin Only', 
+choose the device in the Chrome web-serial port selection dialog, and follow the prompts. This will
+download and reflash the device. Then turn the device on and off with the power switch and it should 
+boot up with the usual CIRCUITPY drive.
+
+
+
+
 
 Get input events
 
