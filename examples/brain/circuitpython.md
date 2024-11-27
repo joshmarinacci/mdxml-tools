@@ -1,5 +1,10 @@
 # CircuitPython
 
+
+## Useful Links
+
+* [Memory saving tips for CircuitPython](https://learn.adafruit.com/Memory-saving-tips-for-CircuitPython?view=all)
+
 ## Installation and Setup
 ### Install Python
 
