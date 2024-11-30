@@ -34,14 +34,14 @@ pip install circup
 circup --version
 ```
 
-## `circup` commands
+### `circup` commands
 
 * List all out of date modules: `circup list`
 * update all out of date modules: `circup update`
 * install a new module: `circup install <module_name>`
 * show `circup show`
 
-## PyCharm Setup
+### PyCharm Setup
 
 Under **Project Settings** / **Python interpreter** click the **+** button to
 install new packages. Install `circuitpython-stubs`, and then the
@@ -167,37 +167,6 @@ pin = board.D0
 pin = getattr(board,'D0')
 ```
 
-
-
-## convert a PNG to a indexed color bitmap
-
-```shell
-convert digits.png -colors 64 -type palette -compress None BMP3:digits.bmp
-```
-
-## use a custom font in a label or button
-
-[Overview | Custom Fonts for CircuitPython Displays | Adafruit Learning System](https://learn.adafruit.com/custom-fonts-for-pyportal-circuitpython-display/overview)
-### Convert  truetype font to bitmap
-```shell
-brew install otf2bdf
-otf2bdf FontFile.ttf -p pointsize -o FontFile.bdf
-```
-
-### convert bitmap ascii to bitmap binary
-[bdftopcf font converter](https://adafruit.github.io/web-bdftopcf/)
-
-### Use in python code
-
-```python
-from adafruit_display_text import label
-from adafruit_bitmap_font import bitmap_font
-
-font = bitmap_font.load_font("my_font.bdf")
-# draw in red
-text_label = label.Label(font, text="Greetings Earthling!", color=0xFF0000)
-
-```
 
 
 ## shorts
@@ -356,11 +325,12 @@ if __name__ == '__main__':
 
 ## Graphics
 
-Everything graphics in CircuitPython is built around the displayio library. 
+Everything graphics in CircuitPython is built around the displayio library.
+
 * [API docs](https://docs.circuitpython.org/en/latest/shared-bindings/displayio/)
 * [Official Adafruit Tutorial](https://learn.adafruit.com/circuitpython-display-support-using-displayio/introduction)
 
-## display graphics
+### display graphics
 
 First you need a display object, which is usually preconfigured for your board if it
 has a built in display, as `board.display`. It will automatically refresh the screen.
@@ -384,6 +354,35 @@ label = label.Label(
 )
 display.root_group.append(label)
 ```
+
+### Fonts
+
+
+#### use a custom font in a label or button
+
+[Overview | Custom Fonts for CircuitPython Displays | Adafruit Learning System](https://learn.adafruit.com/custom-fonts-for-pyportal-circuitpython-display/overview)
+
+Convert  truetype font to bitmap
+
+```shell
+brew install otf2bdf
+otf2bdf FontFile.ttf -p pointsize -o FontFile.bdf
+```
+
+convert bitmap ascii to bitmap binary
+[bdftopcf font converter](https://adafruit.github.io/web-bdftopcf/)
+
+Use in python code
+
+```python
+from adafruit_display_text import label
+from adafruit_bitmap_font import bitmap_font
+
+font = bitmap_font.load_font("my_font.bdf")
+# draw in red
+text_label = label.Label(font, text="Greetings Earthling!", color=0xFF0000)
+```
+
 
 
 ### Bitmaps
@@ -412,6 +411,12 @@ the bitmap without any repetition, do:
 ```python
 tilegrid = displayio.TileGrid(bitmap, pixel_shader=palette)
 display.root_group.append(tilegrid)
+```
+
+#### convert a PNG to a indexed color bitmap
+
+```shell
+convert digits.png -colors 64 -type palette -compress None BMP3:digits.bmp
 ```
 
 
