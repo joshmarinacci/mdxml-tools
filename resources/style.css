@@ -9,9 +9,32 @@ html, body {
     --border-color-muted: #d1d9e0b3;
 }
 body {
-    position: relative;
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
+    nav.docset {
+        grid-column:1;
+        height: 90vh;
+        overflow-y: scroll;
+        position: static;
+    }
+    nav.toc {
+        grid-column: 3;
+        height: 90vh;
+        overflow-y: scroll;
+        position: static;
+    }
+    article {
+        /*max-width: 40rem;*/
+        grid-column: 2;
+        grid-row: 1;
+        height: 90vh;
+        overflow-y: scroll;
+    }
+}
+
+body {
+    padding: 0;
+    margin:0;
 }
 
 /*    layout   */
@@ -19,41 +42,53 @@ article {
     margin: 0 auto;
     max-width: 40rem;
     padding:0;
-    grid-column: 2;
-    grid-row: 1;
     overflow: hidden;
 }
 
-nav.docset {
-    grid-column: 1;
-}
-nav.toc {
-    grid-column: 3;
-}
 
 
 /* TOC formatting */
 nav {
-    list-style: none;
-    padding:0;
-    background-color: var(--nav-bg-color);
-}
-nav ul {
-    list-style: none;
-    padding:0;
-}
-nav li {
-    padding: 0.25rem 0.5rem;
+    ul {
+        list-style: none;
+        padding:0;
+    }
+    li {
+        padding: 0.25rem 0.5rem;
+        &.active {
+            background-color: darkred;
+        }
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    a:hover {
+        background-color: #dcdcdc;
+    }
+    &.docset {
+        background-color: black;
+        color: white;
+    }
+    &.toc {
+        background-color: black;
+        color: white;
+    }
+    &.toolbar {
+        background-color: black;
+        border: 1px solid gray;
+        border-width: 0 0 1px 0;
+        color: white;
+        display: flex;
+        flex-direction: row;
+        padding: 0.25rem;
+        span {
+            padding: 0 1rem;
+        }
+    }
 }
 
-nav a {
-    text-decoration: none;
-    color: black;
-    display: block;
-}
-nav a:hover {
-    background-color: #dcdcdc;
-}
 
 /* headers */
 h1, h2,h3 {

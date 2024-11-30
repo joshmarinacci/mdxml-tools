@@ -57,8 +57,6 @@ await mkdir(opts.values.outdir)
 async function renderDocset(opts: CLIOpts) {
     const xml = await loadXml(opts.values.infile)
     const docset = xmlToDocset(xml)
-    // console.log('docset', docset)
-    // copy style
     await copyStyles(opts)
     const url_map = new Map<string,string>
     // track each page

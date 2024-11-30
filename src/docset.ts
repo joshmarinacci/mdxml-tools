@@ -1,6 +1,4 @@
 import {XmlDocument, XmlElement} from "@rgrove/parse-xml";
-import path from "node:path";
-import {X} from "vitest/dist/reporters-yx5ZTtEV.js";
 
 export type Page = {
     src:string
@@ -27,12 +25,13 @@ function xmlToResource(ch: XmlElement):Resource {
     }
 }
 
-export function xmlToDocset(xml: XmlDocument) {
-    // console.log('root is',xml.root)
-    // console.log("atts is",xml.root?.attributes['title'])
-    const docset:Docset = {
-        title:xml.root?.attributes['title'],
-        pages:xml.root?.children
+export function xmlToDocset(xml: XmlDocument):Docset {
+    if (!xml.root) throw new Error("docset.xml missing root")
+    if (!xml.root.attributes) throw new Error("docset.xml missing attributes")
+    if (!xml.root.attributes['title']) throw new Error("docset.xml missing 'title' attribute")
+    return {
+        title: xml.root?.attributes['title'],
+        pages: xml.root?.children
             .filter(ch => ch instanceof XmlElement)
             .filter(ch => ch.name === 'page')
             .map(ch => xmlToPage(ch)),
@@ -42,7 +41,6 @@ export function xmlToDocset(xml: XmlDocument) {
             .map(ch => xmlToResource(ch))
 
     }
-    return docset
 }
 
 
@@ -78,6 +76,7 @@ const index_template = (docset:Docset,content:string) => {
 ${content}
 </ul>
 </nav>
+<h1>${docset.title}</h1>
 </body>
 </html>`
 }
@@ -88,7 +87,7 @@ export async function renderIndexPage(docset: Docset, root: XmlDocument, url_map
         'page':(e) => `<li><a href="${url_map.get(e.attributes.src)}">${e.attributes.title}</a></li>\n`,
         "resource":(e,c) => ""
     })
-    // console.log("the output is",output)
+    console.log("the output is",output)
     return output
 /*    const pages = docset.pages.map(page => {
             return `<li><a href="${path.basename(page.src, '.xml') + ".html"}">${page.title}</a></li>`
