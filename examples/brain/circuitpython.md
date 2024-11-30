@@ -290,9 +290,7 @@ print(ntp.datetime)
 
 ```
 
-
-
-## files
+## Files
 
 ### Load JSON from disk
 
