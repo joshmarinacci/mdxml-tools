@@ -10,6 +10,9 @@
 
 MacOS instructions
 
+Python on Mac is a pain because there are so many different ways to do it. I've found that
+`pyenv` is the best way to manage python versions on MacOS
+
 ```shell
 # install pyenv
 brew install pyenv pyenv-virtualenv
@@ -24,7 +27,14 @@ pyenv install 3
 echo 'PATH=$(pyenv root)/shims:$PATH' >> ~/.zshrc
 ````
 
-Now restart your shell / open a new terminal window.
+Now restart your shell / open a new terminal window. 
+
+You can manage python with these commands:
+
+* See the current global version: `pyenv versions`
+* See where the current python versions come from: `pyenv versions`
+* See what is the current local version: `pyenv local`
+* Set the current local version to 3.13.1: `pyenv local 3.13.1`
 
 ### Install `circup`
 
@@ -166,6 +176,10 @@ pin = board.D0
 # or
 pin = getattr(board,'D0')
 ```
+
+## MagTag
+
+
 
 
 
