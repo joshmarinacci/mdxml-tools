@@ -34,7 +34,9 @@ You can manage python with these commands:
 * See the current global version: `pyenv versions`
 * See where the current python versions come from: `pyenv versions`
 * See what is the current local version: `pyenv local`
-* Set the current local version to 3.13.1: `pyenv local 3.13.1`
+* List all possible versions of python to install `pyenv install --list`
+* Install (download and build) a particular version of python `pyenv install 3.12.8`
+* Set the current local version to 3.12.8: `pyenv local 3.12.8`
 
 ### Install `circup`
 
@@ -159,6 +161,32 @@ while True:
 * get into boot loader mode with double click on the reset button.
 * asyncio is not supported on SAMD21 boards due to lack of storage and RAM.
 
+## Adafruit Magtag
+
+If your magtag already has the U2F bootloader on it, you can just double click the reset button
+to enter bootmode, then drag the .uf2 file with [the latest release of CircuitPython](https://circuitpython.org/board/adafruit_magtag_2.9_grayscale/) onto the
+magtag bootloader drive that appears.  Otherwise you will need to use the ESP32 bin tool to install it.
+
+## Lilygo T-Display S3
+
+This little board is ESP based and doesn't come from Adafruit so you can't enter bootmode to open up a local drive. You have to install
+circuitpython over serial connection. The easiest way to do this is from the CP install page's new 'open installer button'.
+You *must* do this part on Chrome.
+
+1. plug the device into your computer using a USB cable. make sure it's a data cable, not just power.
+2. Hold the boot button, click the reset button, then release the boot button. It should be in bootmode. From the commandline on a
+a mac you should be able to see the serial port using `ls -l /dev/tty.*`.
+3. Go to the [CircuitPython release page](https://circuitpython.org/board/lilygo_tdisplay_s3/) using Chrome.
+4. Click the 'open installer' button (on the right side below the purple download buttons). *image here*
+5. Click the 'Upgrade CircuitPython 9.2.1 Bin Only' link in the dialog and follow the prompts. Assuming the device's serial port was found you should have CP installed after a minute or two.
+6. Reboot the device and the `CIRCUITPY` drive should come up.
+
+## CYB Cheap Yellow Board 
+Also called the [Sunton ESP32-2432S028](https://circuitpython.org/board/sunton_esp32_2432S028/).  Like many ESP32 boards
+you must install CircuitPython using the web install using Chrome, or the commandline esp32 tool.
+
+
+
 ## KB2040:
 * [learn page](https://learn.adafruit.com/adafruit-kb2040)
 * [pinout PDF](https://github.com/adafruit/Adafruit-KB2040-PCB/blob/main/Adafruit%20KB2040%20Pinout.pdf)
@@ -176,8 +204,6 @@ pin = board.D0
 # or
 pin = getattr(board,'D0')
 ```
-
-## MagTag
 
 
 
