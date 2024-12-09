@@ -299,6 +299,18 @@ for network in wifi.radio.start_scanning_networks():
 wifi.radio.connect(ssid, password)
 ```
 
+### print wifi info
+
+```python
+if wifi.radio.connected:
+    print("wifi SSID info = ",wifi.radio.ap_info.ssid)
+    print('transmit power', wifi.radio.tx_power)
+    print(f"My MAC address: {[hex(i) for i in wifi.radio.mac_address]}")
+    print("radio enabled", wifi.radio.enabled)
+    print("host name", wifi.radio.hostname)
+```
+
+
 ### fetch HTTP request
 
 ```python
