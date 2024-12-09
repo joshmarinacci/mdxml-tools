@@ -146,13 +146,8 @@ while True:
 
 If your magtag already has the U2F bootloader on it, you can just double click the reset button to enter bootmode, then drag the .uf2 file with [the latest release of CircuitPython](https://circuitpython.org/board/adafruit_magtag_2.9_grayscale/) onto the magtag bootloader drive that appears.  Otherwise you will need to use the ESP32 bin tool to install it.
 
-The magtag has peripherals
-
-https://docs.circuitpython.org/projects/magtag/en/latest/api.html#adafruit-magtag-peripherals
-
-The pinout
-
-https://cdn-learn.adafruit.com/assets/assets/000/102/127/original/adafruit_products_Adafruit_MagTag_ESP32-S2_pinout.png?1620920094
+The magtag has [peripherals](https://docs.circuitpython.org/projects/magtag/en/latest/api.html#adafruit-magtag-peripherals)
+and here is [the printout](https://cdn-learn.adafruit.com/assets/assets/000/102/127/original/adafruit_products_Adafruit_MagTag_ESP32-S2_pinout.png?1620920094).
 
 Init the MagTag object:
 
@@ -169,7 +164,7 @@ Check the battery level by looking at the `magtag.peripherals.battery` property.
 print("battery is", magtag.peripherals.battery)
 ```
 
-# Deep Sleep
+### Deep Sleep
 
 The MagTag can enter a super deep sleep for a certain number of seconds using the `exit_and_deep_sleep` function. When the time is up the MagTag will reboot and run the contents of `code.py` again.
 
@@ -214,7 +209,7 @@ pin = board.D0
 pin = getattr(board,'D0')
 ```
 
-## shorts
+## General Python
 
 * turn an exception into an array of strings with `traceback.format_exception(e)`
 * format an array of strings into a single string with `”some string”.join(arr)`.
@@ -461,7 +456,7 @@ display.root_group.append(tilegrid)
 convert digits.png -colors 64 -type palette -compress None BMP3:digits.bmp
 ```
 
-# E-Ink screen
+### E-Ink screen
 
 E-ink screens show only black and white, but can effectively show grayscale using dithering. Internally the screens use a full color frame buffer, so colors should be specified the same as normal.
 
