@@ -139,12 +139,12 @@ while True:
 ## QT Py (not the rp2040 version)
 
 * [learn page](https://learn.adafruit.com/adafruit-qt-py)
-* get into boot loader mode with double click on the reset button.
+* get into bootloader mode with a double-click on the reset button.
 * asyncio is not supported on SAMD21 boards due to lack of storage and RAM.
 
 ## Adafruit Magtag
 
-If your magtag already has the U2F bootloader on it, you can just double click the reset button to enter bootmode, then drag the .uf2 file with [the latest release of CircuitPython](https://circuitpython.org/board/adafruit_magtag_2.9_grayscale/) onto the magtag bootloader drive that appears.  Otherwise you will need to use the ESP32 bin tool to install it.
+If your magtag already has the U2F bootloader on it, you can just double-click the reset button to enter bootmode, then drag the .uf2 file with [the latest release of CircuitPython](https://circuitpython.org/board/adafruit_magtag_2.9_grayscale/) onto the magtag bootloader drive that appears.  Otherwise you will need to use the ESP32 bin tool to install it.
 
 The magtag has [peripherals](https://docs.circuitpython.org/projects/magtag/en/latest/api.html#adafruit-magtag-peripherals)
 and here is [the printout](https://cdn-learn.adafruit.com/assets/assets/000/102/127/original/adafruit_products_Adafruit_MagTag_ESP32-S2_pinout.png?1620920094).
@@ -156,7 +156,11 @@ from adafruit_magtag.magtag import MagTag
 magtag = MagTag()
 ```
 
-The MagTag has a buzzer. Play tones with `magtag.peripherals.play_tone(<frequency>,<seconds>)`.
+The MagTag has a buzzer. Play tones with:
+
+```python
+magtag.peripherals.play_tone(<frequency>,<seconds>)
+```
 
 Check the battery level by looking at the `magtag.peripherals.battery` property.
 
