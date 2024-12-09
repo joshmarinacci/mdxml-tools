@@ -1,17 +1,16 @@
 # CircuitPython
 
-
 ## Useful Links
 
 * [Memory saving tips for CircuitPython](https://learn.adafruit.com/Memory-saving-tips-for-CircuitPython?view=all)
 
 ## Installation and Setup
+
 ### Install Python
 
 MacOS instructions
 
-Python on Mac is a pain because there are so many different ways to do it. I've found that
-`pyenv` is the best way to manage python versions on MacOS
+Python on Mac is a pain because there are so many different ways to do it. I've found that `pyenv` is the best way to manage python versions on MacOS
 
 ```shell
 # install pyenv
@@ -25,9 +24,9 @@ pyenv install 3
 
 # add to the shell
 echo 'PATH=$(pyenv root)/shims:$PATH' >> ~/.zshrc
-````
+```
 
-Now restart your shell / open a new terminal window. 
+Now restart your shell / open a new terminal window.
 
 You can manage python with these commands:
 
@@ -55,17 +54,13 @@ circup --version
 
 ### PyCharm Setup
 
-Under **Project Settings** / **Python interpreter** click the **+** button to
-install new packages. Install `circuitpython-stubs`, and then the
-libraries you are using. common ones include:
+Under **Project Settings** / **Python interpreter** click the **+** button to install new packages. Install `circuitpython-stubs`, and then the libraries you are using. common ones include:
 
 * adafruit-circuitpython-connectionmanager
 * adafruit-circuitpython-requests
 * adafruit-circuitpython-ntp
 
-
 Full details [here](https://learn.adafruit.com/welcome-to-circuitpython/pycharm-and-circuitpython).
-
 
 # Specific Devices
 
@@ -73,19 +68,9 @@ Full details [here](https://learn.adafruit.com/welcome-to-circuitpython/pycharm-
 
 ### Install firmware
 
-The T-Deck firmware can be downloaded from [the usual location](https://circuitpython.org/board/lilygo_tdeck/) but it cannot enter bootloader mode as a USB drive like
-most other devices. Instead you must install CircuitPython using WebSerial, which only
-works in Chrome. 
+The T-Deck firmware can be downloaded from [the usual location](https://circuitpython.org/board/lilygo_tdeck/) but it cannot enter bootloader mode as a USB drive like most other devices. Instead you must install CircuitPython using WebSerial, which only works in Chrome.
 
-To install it, go to [the CircuitPython download page](https://circuitpython.org/board/lilygo_tdeck/) in Chrome and click
-the **Open Installer** button. A dialog will appear. Select 'Upgrade CircuitPython 9.2.1 Bin Only', 
-choose the device in the Chrome web-serial port selection dialog, and follow the prompts. This will
-download and reflash the device. Then turn the device on and off with the power switch and it should 
-boot up with the usual CIRCUITPY drive.
-
-
-
-
+To install it, go to [the CircuitPython download page](https://circuitpython.org/board/lilygo_tdeck/) in Chrome and click the **Open Installer** button. A dialog will appear. Select 'Upgrade CircuitPython 9.2.1 Bin Only', choose the device in the Chrome web-serial port selection dialog, and follow the prompts. This will download and reflash the device. Then turn the device on and off with the power switch and it should boot up with the usual CIRCUITPY drive.
 
 Get input events
 
@@ -105,9 +90,7 @@ while True:
 
 ## Waveshare round 1.28 LCD RP2040
 
-The [Waveshare round 1.28 LCD](https://github.com/joshmarinacci/waveshare_lcd_test) is a set
-of cheap devices which run CircuitPython and have a USB connection. They have a lot
-of power in a tiny formfactor.
+The [Waveshare round 1.28 LCD](https://github.com/joshmarinacci/waveshare_lcd_test) is a set of cheap devices which run CircuitPython and have a USB connection. They have a lot of power in a tiny formfactor.
 
 ### Code
 
@@ -117,13 +100,11 @@ of power in a tiny formfactor.
 
 ### Boot
 
-Hold down the __boot__ button on the back of the device while plugging in the USB-C cable to your laptop. 
+Hold down the **boot** button on the back of the device while plugging in the USB-C cable to your laptop.
 
 ### Display
 
-To access the display you need to install `gc9a01`, a separate driver library, with
-`circup install gc9a01` then initialize it. Note that the touch and non-touch versions
-are slightly different.  On the non-touch version reset is set to `LCD_RST`. On the touch version it is Pin 13 (`board.GP13`), so initialize it like this:
+To access the display you need to install `gc9a01`, a separate driver library, with `circup install gc9a01` then initialize it. Note that the touch and non-touch versions are slightly different.  On the non-touch version reset is set to `LCD_RST`. On the touch version it is Pin 13 (`board.GP13`), so initialize it like this:
 
 ```python
 spi = busio.SPI(clock=board.LCD_CLK, MOSI=board.LCD_DIN)
@@ -163,41 +144,54 @@ while True:
 
 ## Adafruit Magtag
 
-If your magtag already has the U2F bootloader on it, you can just double click the reset button
-to enter bootmode, then drag the .uf2 file with [the latest release of CircuitPython](https://circuitpython.org/board/adafruit_magtag_2.9_grayscale/) onto the
-magtag bootloader drive that appears.  Otherwise you will need to use the ESP32 bin tool to install it.
+If your magtag already has the U2F bootloader on it, you can just double click the reset button to enter bootmode, then drag the .uf2 file with [the latest release of CircuitPython](https://circuitpython.org/board/adafruit_magtag_2.9_grayscale/) onto the magtag bootloader drive that appears.  Otherwise you will need to use the ESP32 bin tool to install it.
+
+The magtag has peripherals
+
+https://docs.circuitpython.org/projects/magtag/en/latest/api.html#adafruit-magtag-peripherals
+
+The pinout
+
+https://cdn-learn.adafruit.com/assets/assets/000/102/127/original/adafruit_products_Adafruit_MagTag_ESP32-S2_pinout.png?1620920094
+
+# Deep Sleep
+
+The MagTag can enter a super deep sleep for a certain number of seconds using the `exit_and_deep_sleep` function. When the time is up the MagTag will reboot and run the contents of `code.py` again.
+
+```
+magtag.exit_and_deep_sleep(15*60) # 15 minutes
+```
+
+To do a lighter sleep and wake up rather than restarting use the `enter_light_sleep` function.
+
+```
+magtag.enter_light_sleep(60) # 60 seconds
+```
 
 ## Lilygo T-Display S3
 
-This little board is ESP based and doesn't come from Adafruit so you can't enter bootmode to open up a local drive. You have to install
-circuitpython over serial connection. The easiest way to do this is from the CP install page's new 'open installer button'.
-You *must* do this part on Chrome.
+This little board is ESP based and doesn't come from Adafruit so you can't enter bootmode to open up a local drive. You have to install circuitpython over serial connection. The easiest way to do this is from the CP install page's new 'open installer button'. You *must* do this part on Chrome.
 
 1. plug the device into your computer using a USB cable. make sure it's a data cable, not just power.
-2. Hold the boot button, click the reset button, then release the boot button. It should be in bootmode. From the commandline on a
-a mac you should be able to see the serial port using `ls -l /dev/tty.*`.
+2. Hold the boot button, click the reset button, then release the boot button. It should be in bootmode. From the commandline on a a mac you should be able to see the serial port using `ls -l /dev/tty.*`.
 3. Go to the [CircuitPython release page](https://circuitpython.org/board/lilygo_tdisplay_s3/) using Chrome.
 4. Click the 'open installer' button (on the right side below the purple download buttons). *image here*
 5. Click the 'Upgrade CircuitPython 9.2.1 Bin Only' link in the dialog and follow the prompts. Assuming the device's serial port was found you should have CP installed after a minute or two.
 6. Reboot the device and the `CIRCUITPY` drive should come up.
 
-## CYB Cheap Yellow Board 
-Also called the [Sunton ESP32-2432S028](https://circuitpython.org/board/sunton_esp32_2432S028/).  Like many ESP32 boards
-you must install CircuitPython using the web install using Chrome, or the commandline esp32 tool.
+## CYB Cheap Yellow Board
 
-
+Also called the [Sunton ESP32-2432S028](https://circuitpython.org/board/sunton_esp32_2432S028/).  Like many ESP32 boards you must install CircuitPython using the web install using Chrome, or the commandline esp32 tool.
 
 ## KB2040:
+
 * [learn page](https://learn.adafruit.com/adafruit-kb2040)
 * [pinout PDF](https://github.com/adafruit/Adafruit-KB2040-PCB/blob/main/Adafruit%20KB2040%20Pinout.pdf)
 * [CircuitPython firmware download](https://circuitpython.org/board/adafruit_kb2040/)
 * It does support AsyncIO.
-*
-
-
+* 
 
 ### reference board pins by string name
-
 
 ```python
 pin = board.D0 
@@ -205,11 +199,8 @@ pin = board.D0
 pin = getattr(board,'D0')
 ```
 
-
-
-
-
 ## shorts
+
 * turn an exception into an array of strings with `traceback.format_exception(e)`
 * format an array of strings into a single string with `”some string”.join(arr)`.
 * catch an exception:
@@ -223,7 +214,6 @@ pin = getattr(board,'D0')
         logger.error(''.join(traceback.format_exception(e)))
 
 ```
-
 
 # APIs
 
@@ -346,7 +336,6 @@ with open("./blog.html", "r") as txt:
     html = txt.read()
 ```
 
-
 ### unit tests
 
 ```python
@@ -370,9 +359,7 @@ Everything graphics in CircuitPython is built around the displayio library.
 
 ### display graphics
 
-First you need a display object, which is usually preconfigured for your board if it
-has a built in display, as `board.display`. It will automatically refresh the screen.
-The root of the screengraph should already be set to a group, so you can `append` to it.
+First you need a display object, which is usually preconfigured for your board if it has a built in display, as `board.display`. It will automatically refresh the screen. The root of the screengraph should already be set to a group, so you can `append` to it.
 
 ```python
 display = board.display
@@ -395,7 +382,6 @@ display.root_group.append(label)
 
 ### Fonts
 
-
 #### use a custom font in a label or button
 
 [Overview | Custom Fonts for CircuitPython Displays | Adafruit Learning System](https://learn.adafruit.com/custom-fonts-for-pyportal-circuitpython-display/overview)
@@ -407,8 +393,7 @@ brew install otf2bdf
 otf2bdf FontFile.ttf -p pointsize -o FontFile.bdf
 ```
 
-convert bitmap ascii to bitmap binary
-[bdftopcf font converter](https://adafruit.github.io/web-bdftopcf/)
+convert bitmap ascii to bitmap binary [bdftopcf font converter](https://adafruit.github.io/web-bdftopcf/)
 
 Use in python code
 
@@ -421,14 +406,11 @@ font = bitmap_font.load_font("my_font.bdf")
 text_label = label.Label(font, text="Greetings Earthling!", color=0xFF0000)
 ```
 
-
-
 ### Bitmaps
 
 #### Empty bitmap for drawing
 
-A bitmap is just an empty image. It has a fixed size and number of colors. Pixels
-can be set directly using `x,y` coordinates.
+A bitmap is just an empty image. It has a fixed size and number of colors. Pixels can be set directly using `x,y` coordinates.
 
 ```python
 import displayio
@@ -443,8 +425,7 @@ palette[1] = 0xffffff
 bitmap[3,4] = 1
 ```
 
-Bitmaps can only be shown on screen using a tilegrid.  To create a tilegrid that shows
-the bitmap without any repetition, do:
+Bitmaps can only be shown on screen using a tilegrid.  To create a tilegrid that shows the bitmap without any repetition, do:
 
 ```python
 tilegrid = displayio.TileGrid(bitmap, pixel_shader=palette)
@@ -457,15 +438,9 @@ display.root_group.append(tilegrid)
 convert digits.png -colors 64 -type palette -compress None BMP3:digits.bmp
 ```
 
-
-
-
-
 ### Terminal
-The `terminalio.Terminal` class implements a traditional 'terminal' with VT100 control codes.
-It does this by giving you a stream you can print to. It converts the stream of characters
-into a tilegrid using the bitmap font. It will wrap lines if necessary. Unfortunately it only
-supports a single color at a time. Multi-colored text isn't supported.
+
+The `terminalio.Terminal` class implements a traditional 'terminal' with VT100 control codes. It does this by giving you a stream you can print to. It converts the stream of characters into a tilegrid using the bitmap font. It will wrap lines if necessary. Unfortunately it only supports a single color at a time. Multi-colored text isn't supported.
 
 ```python
 import terminalio
@@ -517,39 +492,22 @@ timestamp.isoformat()
 
 ```
 
-
-
 # logging
+
 The logger framework lets you set log levels and send your logs to multiple outputs. There is a FileHandler class that will log to a file, however it does not flush automatically. I’m not sure when it **ever** flushes, actually, which is a problem for long running processes that only log occasionally.  so I created my own JoshFileHandler that flushes after every log.
 
-
 ## visual logging
+
 [terminalio – Displays text in a TileGrid — Adafruit CircuitPython 8.2.0-rc.0 documentation](https://docs.circuitpython.org/en/latest/shared-bindings/terminalio/index.html)
 
 [Using plain terminalio with displayio - ValueError: Tile index out of bounds · Issue #7885 · adafruit/circuitpython · GitHub](https://github.com/adafruit/circuitpython/issues/7885)
 
-
-
 # Circup failure
+
 If the latest build of CP is bad for some reason, Circup can fail because it will always try to download the latest release. There should be an option to not check for the latest release. If you are installing a lib then you probably want the version of that lib that matches the CP on your board. Something like this:
 
 ```shell
 circup --use-current-version install adafruit_bitmapsaver
 ```
 
-
-MF-1304:~ josh.marinacci$ cp ~/Downloads/adafruit-circuitpython-bundle-8.x-mpy-20230524/lib/adafruit_bitmapsaver.mpy *Volumes/CIRCUITPY/lib*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+MF-1304:\~ josh.marinacci$ cp \~/Downloads/adafruit-circuitpython-bundle-8.x-mpy-20230524/lib/adafruit_bitmapsaver.mpy *Volumes/CIRCUITPY/lib*
