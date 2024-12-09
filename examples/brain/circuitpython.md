@@ -154,6 +154,21 @@ The pinout
 
 https://cdn-learn.adafruit.com/assets/assets/000/102/127/original/adafruit_products_Adafruit_MagTag_ESP32-S2_pinout.png?1620920094
 
+Init the MagTag object:
+
+```
+from adafruit_magtag.magtag import MagTag
+magtag = MagTag()
+```
+
+The MagTag has a buzzer. Play tones with `magtag.peripherals.play_tone(<frequency>,<seconds>)`.
+
+Check the battery level by looking at the `magtag.peripherals.battery` property.
+
+```
+print("battery is", magtag.peripherals.battery)
+```
+
 # Deep Sleep
 
 The MagTag can enter a super deep sleep for a certain number of seconds using the `exit_and_deep_sleep` function. When the time is up the MagTag will reboot and run the contents of `code.py` again.
@@ -306,7 +321,6 @@ with requests.get("http://webpage.site") as response:
 ### get the network time
 
 ```python
-
 # specific to the MatrixPortal M4
 pool = adafruit_connection_manager.get_radio_socketpool(matrix.network._wifi.esp)
 # most modern boards
@@ -317,7 +331,13 @@ ntp = adafruit_ntp.NTP(socketpool=pool)
 
 # print the time
 print(ntp.datetime)
+```
 
+For the MagTag use `magtag.get_local_time()`, but you’ll need to setup the Adafruit IO credentials in `settings.toml`. 
+
+```
+magtag.get_local_time() # sync with the network time
+now = time.localtime()
 ```
 
 ## Files
@@ -371,11 +391,14 @@ display.root_group.append(some_gfx_object)
 create a new text label:
 
 ```python
+from adafruit_display_text import label
+ 
 label = label.Label(
     font=terminalio.FONT,
     text="Greetings Earthlings",
     x=20,
     y=10,
+    scale=1
 )
 display.root_group.append(label)
 ```
@@ -438,6 +461,25 @@ display.root_group.append(tilegrid)
 convert digits.png -colors 64 -type palette -compress None BMP3:digits.bmp
 ```
 
+# E-Ink screen
+
+E-ink screens show only black and white, but can effectively show grayscale using dithering. Internally the screens use a full color frame buffer, so colors should be specified the same as normal.
+
+Fill the background with white using a single large bitmap
+
+```
+# fill the background with white
+background_bitmap = displayio.Bitmap(WIDTH, HEIGHT, 1)
+# Map colors in a palette
+palette = displayio.Palette(1)
+palette[0] = WHITE # 0xffffff
+# Create a Tilegrid with the background and put in the displayio group
+t = displayio.TileGrid(background_bitmap, pixel_shader=palette)
+group.append(t)
+```
+
+Then set the color of labels to be `BLACK` as `0x000000`.
+
 ### Terminal
 
 The `terminalio.Terminal` class implements a traditional 'terminal' with VT100 control codes. It does this by giving you a stream you can print to. It converts the stream of characters into a tilegrid using the bitmap font. It will wrap lines if necessary. Unfortunately it only supports a single color at a time. Multi-colored text isn't supported.
@@ -484,6 +526,16 @@ print("some text", file=ptermx, end="")
 ```
 
 ## Dates and Times
+
+Get the time
+
+```
+import time
+now = time.localtime()
+month = now[1]
+day = now[2]
+(hour, minutes, seconds) = now[3:6]
+```
 
 print datetime in isoformat
 
