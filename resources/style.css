@@ -74,6 +74,17 @@ nav {
     &.toc {
         background-color: black;
         color: white;
+        li > a {
+            /*border: 1px solid red;*/
+            display: block;
+        }
+        li > ul {
+            /*border: 1px solid green;*/
+            display: block;
+            &.collapsed {
+                display: none;
+            }
+        }
     }
     &.toolbar {
         background-color: black;

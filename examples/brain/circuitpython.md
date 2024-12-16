@@ -146,8 +146,7 @@ while True:
 
 If your magtag already has the U2F bootloader on it, you can just double-click the reset button to enter bootmode, then drag the .uf2 file with [the latest release of CircuitPython](https://circuitpython.org/board/adafruit_magtag_2.9_grayscale/) onto the magtag bootloader drive that appears.  Otherwise you will need to use the ESP32 bin tool to install it.
 
-The magtag has [peripherals](https://docs.circuitpython.org/projects/magtag/en/latest/api.html#adafruit-magtag-peripherals)
-and here is [the printout](https://cdn-learn.adafruit.com/assets/assets/000/102/127/original/adafruit_products_Adafruit_MagTag_ESP32-S2_pinout.png?1620920094).
+The magtag has [peripherals](https://docs.circuitpython.org/projects/magtag/en/latest/api.html#adafruit-magtag-peripherals) and here is [the printout](https://cdn-learn.adafruit.com/assets/assets/000/102/127/original/adafruit_products_Adafruit_MagTag_ESP32-S2_pinout.png?1620920094).
 
 Init the MagTag object:
 
@@ -216,7 +215,7 @@ pin = getattr(board,'D0')
 ## General Python
 
 * turn an exception into an array of strings with `traceback.format_exception(e)`
-* format an array of strings into a single string with `”some string”.join(arr)`.
+* format an array of strings into a single string with `”some string”.join(arr)`. 
 * catch an exception:
 
 ```python
@@ -228,6 +227,10 @@ pin = getattr(board,'D0')
         logger.error(''.join(traceback.format_exception(e)))
 
 ```
+
+\* format a float: `print(f”num = {num}”)`.
+
+\* format a float with leading zeros up to two chars wide: `print(f”num = {num:02}”)`.
 
 # APIs
 
@@ -314,7 +317,6 @@ if wifi.radio.connected:
     print("host name", wifi.radio.hostname)
 ```
 
-
 ### fetch HTTP request
 
 ```python
@@ -344,7 +346,7 @@ ntp = adafruit_ntp.NTP(socketpool=pool)
 print(ntp.datetime)
 ```
 
-For the MagTag use `magtag.get_local_time()`, but you’ll need to setup the Adafruit IO credentials in `settings.toml`. 
+For the MagTag use `magtag.get_local_time()`, but you’ll need to setup the Adafruit IO credentials in `settings.toml`.
 
 ```
 magtag.get_local_time() # sync with the network time

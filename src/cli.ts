@@ -58,6 +58,7 @@ async function renderDocset(opts: CLIOpts) {
     const xml = await loadXml(opts.values.infile)
     const docset = xmlToDocset(xml)
     await copyStyles(opts)
+    await copyScripts(opts)
     const url_map = new Map<string,string>
     // track each page
     for(let page of docset.pages) {
@@ -120,6 +121,13 @@ async function copyStyles(opts: CLIOpts) {
     const style_outpath = path.join(opts.values.outdir, 'style.css')
     log.info("copying", style_inpath, 'to', style_outpath)
     await fs.cp(style_inpath, style_outpath)
+}
+
+async function copyScripts(opts: CLIOpts) {
+    const inpath = path.join(opts.values.resources, 'toc.js')
+    const outpath = path.join(opts.values.outdir, 'toc.js')
+    log.info("copying", inpath, 'to', outpath)
+    await fs.cp(inpath, outpath)
 }
 
 // add resources

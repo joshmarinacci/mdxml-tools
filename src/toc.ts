@@ -3,6 +3,7 @@ import {Block, Header} from "./markdown.js";
 import {Visitor} from "./visitor.js";
 import {childrenToText} from "./xml.js";
 import {slugForHeader} from "./util.js";
+import {genId} from "josh_js_util";
 
 export type TOCEntry = {
     level: number;
@@ -50,7 +51,11 @@ function renderTOCList(entries:TOCEntry[]):string {
     let output = ""
     for(let entry of entries) {
         if (entry.level > depth) {
-            output += "<ul>"
+            const id = genId("closer_")
+            if (depth > 0) {
+                output += `<button data-target="${id}">+</button>`
+            }
+            output += `<ul id="${id}">`
             depth += 1
             output += "<li>"
             output += renderTOCLink(entry)

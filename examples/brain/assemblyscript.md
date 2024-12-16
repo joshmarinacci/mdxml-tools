@@ -1,6 +1,4 @@
 # AssemblyScript Brain
-#brain
-
 
 While AS (Assembly Script) looks a lot like TS (TypeScript), it’s not. It has a lot of limitations. It is limited in specific way to make sure
 
@@ -16,8 +14,8 @@ let has_germ = cells.some((cell:Cell) => cell.germ==true)
 
 ```
 
-
 # class parameter shorthand
+
 Create an class with a constructor. All parametesr must be have types. AS generally cannot infer your types. even return types must be declared
 
 ``` typescript
@@ -82,5 +80,4 @@ arr[0]; // now it works 😊
 w4 png2src --assemblyscript bunny.png
 ```
 
-The PNG must have only 4 colors in it.
-Use subrect to draw
+The PNG must have only 4 colors in it. Use subrect to draw

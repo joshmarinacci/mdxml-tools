@@ -1,6 +1,6 @@
 # Javascript, Node Brain
 
-`create-react-app` with typescript and full tests and react.
+`create-react-app` with TypeScript and full tests and react.
 
 ``` shell
 npx create-react-app my-app --template typescript

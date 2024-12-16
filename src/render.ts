@@ -21,6 +21,7 @@ function renderHeader() {
     <title>doc title</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
     <link rel="stylesheet" href="./style.css"/>
+    <script src="./toc.js"></script>
 </head>
 <body>
 `
